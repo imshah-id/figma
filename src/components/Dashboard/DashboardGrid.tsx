@@ -1,3 +1,4 @@
+"use client";
 import React from "react";
 import {
   ArrowRight,
@@ -7,12 +8,19 @@ import {
   LockKeyhole,
   AlertCircle,
 } from "lucide-react";
+import { motion } from "framer-motion";
 
 export default function DashboardGrid() {
   return (
     <div className="grid flex-1 grid-cols-1 items-start gap-6 xl:grid-cols-3">
       {/* Profile Strength Widget */}
-      <div className="flex h-[350px] flex-col overflow-hidden rounded-xl border border-card-border bg-card p-4">
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5, delay: 0.35 }}
+        whileHover={{ y: -4 }}
+        className="flex h-[350px] flex-col overflow-hidden rounded-xl border border-card-border bg-card p-4 transition-shadow hover:shadow-lg"
+      >
         <div className="mb-3 flex items-center justify-between">
           <h3 className="text-lg font-bold text-text-primary">
             Profile Strength
@@ -49,13 +57,23 @@ export default function DashboardGrid() {
             </div>
           </div>
         </div>
-        <button className="mt-4 flex w-full items-center justify-center gap-2 rounded-full border border-card-border bg-transparent px-3 py-2.5 text-sm font-semibold text-text-primary transition-all hover:border-text-secondary hover:bg-secondary">
+        <motion.button
+          whileHover={{ y: -2 }}
+          whileTap={{ scale: 0.98 }}
+          className="mt-4 flex w-full items-center justify-center gap-2 rounded-full border border-card-border bg-transparent px-3 py-2.5 text-sm font-semibold text-text-primary transition-all hover:border-text-secondary hover:bg-secondary"
+        >
           View Full Profile <ArrowRight size={14} />
-        </button>
-      </div>
+        </motion.button>
+      </motion.div>
 
       {/* Universities Widget */}
-      <div className="flex h-[350px] flex-col overflow-hidden rounded-xl border border-card-border bg-card p-4">
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5, delay: 0.4 }}
+        whileHover={{ y: -4 }}
+        className="flex h-[350px] flex-col overflow-hidden rounded-xl border border-card-border bg-card p-4 transition-shadow hover:shadow-lg"
+      >
         <div className="mb-3 flex items-center justify-between">
           <h3 className="text-lg font-bold text-text-primary">Universities</h3>
         </div>
@@ -83,13 +101,23 @@ export default function DashboardGrid() {
             <span>Lock at least 1 university to proceed to the next stage</span>
           </div>
         </div>
-        <button className="mt-4 flex w-full items-center justify-center gap-2 rounded-full border border-card-border bg-transparent px-3 py-2.5 text-sm font-semibold text-text-primary transition-all hover:border-text-secondary hover:bg-secondary">
+        <motion.button
+          whileHover={{ y: -2 }}
+          whileTap={{ scale: 0.98 }}
+          className="mt-4 flex w-full items-center justify-center gap-2 rounded-full border border-card-border bg-transparent px-3 py-2.5 text-sm font-semibold text-text-primary transition-all hover:border-text-secondary hover:bg-secondary"
+        >
           Explore Universities <ArrowRight size={14} />
-        </button>
-      </div>
+        </motion.button>
+      </motion.div>
 
       {/* Tasks Widget */}
-      <div className="flex h-[350px] flex-col overflow-hidden rounded-xl border border-card-border bg-card p-4">
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5, delay: 0.45 }}
+        whileHover={{ y: -4 }}
+        className="flex h-[350px] flex-col overflow-hidden rounded-xl border border-card-border bg-card p-4 transition-shadow hover:shadow-lg"
+      >
         <div className="mb-3 flex items-center justify-between">
           <h3 className="text-lg font-bold text-text-primary">Your Tasks</h3>
           <span className="text-sm font-medium text-text-tertiary">0/3</span>
@@ -128,10 +156,14 @@ export default function DashboardGrid() {
             </div>
           </div>
         </div>
-        <button className="mt-4 flex w-full items-center justify-center gap-2 rounded-full border border-card-border bg-transparent px-3 py-2.5 text-sm font-semibold text-text-primary transition-all hover:border-text-secondary hover:bg-secondary">
+        <motion.button
+          whileHover={{ y: -2 }}
+          whileTap={{ scale: 0.98 }}
+          className="mt-4 flex w-full items-center justify-center gap-2 rounded-full border border-card-border bg-transparent px-3 py-2.5 text-sm font-semibold text-text-primary transition-all hover:border-text-secondary hover:bg-secondary"
+        >
           View All Tasks <ArrowRight size={14} />
-        </button>
-      </div>
+        </motion.button>
+      </motion.div>
     </div>
   );
 }

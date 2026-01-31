@@ -1,3 +1,4 @@
+"use client";
 import React from "react";
 import Link from "next/link";
 import {
@@ -9,6 +10,7 @@ import {
   LogOut,
   Sparkles,
 } from "lucide-react";
+import { motion } from "framer-motion";
 
 export default function Sidebar() {
   const navItems = [
@@ -20,7 +22,12 @@ export default function Sidebar() {
   ];
 
   return (
-    <aside className="sticky top-8 z-[100] hidden h-[60vh] w-[248px] flex-col rounded-[20px] border border-card-border bg-[#f4f2f2] px-5 py-7 shadow-md xl:flex">
+    <motion.aside
+      initial={{ opacity: 0, x: -20 }}
+      animate={{ opacity: 1, x: 0 }}
+      transition={{ duration: 0.5, delay: 0 }}
+      className="sticky top-8 z-[100] hidden h-[60vh] w-[248px] flex-col rounded-[20px] border border-card-border bg-[#f4f2f2] px-5 py-7 shadow-md xl:flex"
+    >
       {/* Logo */}
       <div className="mb-8 flex items-center gap-2.5 rounded-lg px-3 py-2">
         <div className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-lg bg-gradient-to-br from-indigo-500 to-purple-600">
@@ -59,6 +66,6 @@ export default function Sidebar() {
           <span>Log out</span>
         </Link>
       </div>
-    </aside>
+    </motion.aside>
   );
 }

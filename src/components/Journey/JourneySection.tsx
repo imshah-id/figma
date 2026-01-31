@@ -1,5 +1,7 @@
+"use client";
 import React from "react";
 import { CircleCheck, Circle, Clock } from "lucide-react";
+import { motion } from "framer-motion";
 
 export default function JourneySection() {
   const steps = [
@@ -30,18 +32,42 @@ export default function JourneySection() {
   ];
 
   return (
-    <section className="flex-shrink-0">
+    <motion.section
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5, delay: 0.2 }}
+      className="flex-shrink-0"
+    >
       <h3 className="mb-4 text-lg font-bold text-text-primary">Your Journey</h3>
       <div className="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-4">
-        {steps.map((step) => {
+        {steps.map((step, index) => {
           const isCompleted = step.status === "completed";
           const isActive = step.status === "active";
 
           return (
-            <div key={step.id} className="flex flex-col gap-4">
-              <div
-                className={`h-1 w-full rounded-sm ${isCompleted || isActive ? "bg-text-primary" : "bg-gray-200"}`}
-              />
+            <motion.div
+              key={step.id}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.25 + index * 0.05 }}
+              whileHover={{ y: -4 }}
+              className="flex flex-col gap-4"
+            >
+              {isActive ? (
+                <motion.div
+                  animate={{ opacity: [0.6, 1, 0.6] }}
+                  transition={{
+                    duration: 2,
+                    repeat: Infinity,
+                    ease: "easeInOut",
+                  }}
+                  className="h-1 w-full rounded-sm bg-text-primary"
+                />
+              ) : (
+                <div
+                  className={`h-1 w-full rounded-sm ${isCompleted ? "bg-text-primary" : "bg-gray-200"}`}
+                />
+              )}
               <div
                 className={`flex h-[130px] flex-col rounded-xl border bg-card p-4 transition-all ${isActive ? "border-text-primary bg-gray-50" : "border-card-border"}`}
               >
@@ -64,10 +90,10 @@ export default function JourneySection() {
                   {step.description}
                 </p>
               </div>
-            </div>
+            </motion.div>
           );
         })}
       </div>
-    </section>
+    </motion.section>
   );
 }

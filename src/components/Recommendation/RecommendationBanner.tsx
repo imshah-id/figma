@@ -1,9 +1,16 @@
+"use client";
 import React from "react";
 import { Sparkles, BookOpen } from "lucide-react";
+import { motion } from "framer-motion";
 
 export default function RecommendationBanner() {
   return (
-    <div className="flex flex-shrink-0 flex-col gap-8 rounded-[20px] border border-card-border bg-[#F8F9FA] p-6 md:flex-row md:items-center">
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5, delay: 0.5 }}
+      className="flex flex-shrink-0 flex-col gap-8 rounded-[20px] border border-card-border bg-[#F8F9FA] p-6 md:flex-row md:items-center"
+    >
       <div className="flex flex-1 items-start gap-5">
         <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-xl bg-black text-white">
           <Sparkles size={24} fill="currentColor" />
@@ -20,14 +27,22 @@ export default function RecommendationBanner() {
       </div>
 
       <div className="flex flex-wrap items-center gap-4">
-        <button className="rounded-xl bg-black px-6 py-4 text-base font-bold text-white transition-all hover:bg-gray-900 active:scale-[0.98]">
+        <motion.button
+          whileHover={{ y: -2, scale: 1.02 }}
+          whileTap={{ scale: 0.98 }}
+          className="rounded-xl bg-black px-6 py-4 text-base font-bold text-white transition-all hover:bg-gray-900"
+        >
           Get Personalized Guidance
-        </button>
-        <button className="flex items-center gap-2.5 rounded-xl border border-card-border bg-white px-6 py-4 text-base font-bold text-text-primary transition-all hover:bg-gray-50 active:scale-[0.98]">
+        </motion.button>
+        <motion.button
+          whileHover={{ y: -2, scale: 1.02 }}
+          whileTap={{ scale: 0.98 }}
+          className="flex items-center gap-2.5 rounded-xl border border-card-border bg-white px-6 py-4 text-base font-bold text-text-primary transition-all hover:bg-gray-50"
+        >
           <BookOpen size={18} />
           View Recommended Universities
-        </button>
+        </motion.button>
       </div>
-    </div>
+    </motion.div>
   );
 }
