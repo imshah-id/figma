@@ -1,7 +1,5 @@
 import React from "react";
 import { CircleCheck, Circle, Clock } from "lucide-react";
-import styles from "./Journey.module.css";
-import clsx from "clsx";
 
 export default function JourneySection() {
   const steps = [
@@ -32,28 +30,25 @@ export default function JourneySection() {
   ];
 
   return (
-    <section className={styles.container}>
-      <h3 className={styles.sectionTitle}>Your Journey</h3>
-      <div className={styles.grid}>
+    <section className="flex-shrink-0">
+      <h3 className="mb-4 text-base font-bold text-text-primary">
+        Your Journey
+      </h3>
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-4">
         {steps.map((step) => {
           const isCompleted = step.status === "completed";
           const isActive = step.status === "active";
 
           return (
-            <div key={step.id} className={styles.cardWrapper}>
+            <div key={step.id} className="flex flex-col gap-4">
               <div
-                className={clsx(
-                  styles.progressBar,
-                  (isCompleted || isActive) && styles.progressBarFilled,
-                )}
+                className={`h-1 w-full rounded-sm ${isCompleted || isActive ? "bg-text-primary" : "bg-gray-200"}`}
               />
-              <div className={clsx(styles.card, isActive && styles.cardActive)}>
+              <div
+                className={`flex h-[120px] flex-col rounded-xl border bg-card p-4 transition-all ${isActive ? "border-text-primary bg-gray-50" : "border-card-border"}`}
+              >
                 <div
-                  className={clsx(
-                    styles.stageHeader,
-                    isCompleted && styles.stageHeaderCompleted,
-                    isActive && styles.stageHeaderActive,
-                  )}
+                  className={`mb-3 flex items-center gap-2 text-[11px] font-bold uppercase tracking-wide ${isCompleted ? "text-accent-green" : isActive ? "text-text-primary" : "text-text-tertiary"}`}
                 >
                   {isCompleted ? (
                     <CircleCheck size={14} />
@@ -64,8 +59,12 @@ export default function JourneySection() {
                   )}
                   <span>Stage {step.id}</span>
                 </div>
-                <h4 className={styles.cardTitle}>{step.title}</h4>
-                <p className={styles.cardDescription}>{step.description}</p>
+                <h4 className="mb-2 text-base font-bold text-text-primary">
+                  {step.title}
+                </h4>
+                <p className="text-[13px] leading-relaxed text-text-secondary">
+                  {step.description}
+                </p>
               </div>
             </div>
           );

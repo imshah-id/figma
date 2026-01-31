@@ -3,7 +3,8 @@
   padding: 30px 46px 30px 4px;
   height: 100vh;
   background-color: var(--background);
-  overflow: hidden;
+  overflow-y: auto;
+  overflow-x: hidden;
 }
 
 .contentWrapper {
@@ -15,8 +16,25 @@
   gap: 20px;
 }
 
-@media (max-width: 1024px) {
+@media (max-width: 1200px) {
   .main {
-    padding: 32px;
+    margin-left: 0;
+    padding: 24px;
+  }
+
+  .contentWrapper {
+    gap: 16px;
+  }
+}
+
+@media (max-width: 768px) {
+  .main {
+    padding: 16px;
+    height: auto;
+    min-height: 100vh;
+  }
+
+  .contentWrapper {
+    gap: 12px;
   }
 }

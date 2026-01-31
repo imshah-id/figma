@@ -11,6 +11,13 @@
   border-radius: 20px;
   border: 1px solid #e5e7eb;
   box-shadow: 2px 2px 12px rgba(0, 0, 0, 0.04);
+  z-index: 100;
+}
+
+@media (max-width: 1200px) {
+  .sidebar {
+    display: none;
+  }
 }
 
 .logo {
