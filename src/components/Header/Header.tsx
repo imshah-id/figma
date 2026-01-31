@@ -5,10 +5,10 @@ export default function Header() {
   return (
     <header className="flex flex-shrink-0 flex-col gap-4 md:flex-row md:items-start md:justify-between md:gap-4">
       <div>
-        <h1 className="mb-1 text-2xl font-extrabold tracking-tight text-text-primary">
+        <h1 className="mb-1 text-3xl font-extrabold tracking-tight text-text-primary">
           Welcome back, Student
         </h1>
-        <p className="text-sm text-text-secondary">
+        <p className="text-base text-text-secondary">
           Here&apos;s your study abroad journey overview
         </p>
       </div>

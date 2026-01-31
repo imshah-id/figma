@@ -6,16 +6,20 @@ import RecommendationBanner from "@/components/Recommendation/RecommendationBann
 
 export default function Home() {
   return (
-    <div className="flex min-h-screen">
-      <Sidebar />
-      <main className="ml-0 h-screen overflow-y-auto overflow-x-hidden bg-background p-4 md:p-6 xl:ml-[280px] xl:p-[30px_46px_30px_4px]">
-        <div className="mx-auto flex h-full max-w-[1280px] flex-col gap-5">
-          <Header />
-          <JourneySection />
-          <DashboardGrid />
-          <RecommendationBanner />
-        </div>
-      </main>
+    <div className="flex min-h-screen items-start justify-center bg-background">
+      <div className="relative flex w-full max-w-[1800px] justify-center gap-12 px-6 py-8 xl:pl-8 xl:pr-8">
+        <Sidebar />
+        <main className="w-full max-w-[1440px]">
+          <div className="flex flex-col gap-6">
+            <Header />
+            <JourneySection />
+            <DashboardGrid />
+            <div className="mt-6">
+              <RecommendationBanner />
+            </div>
+          </div>
+        </main>
+      </div>
     </div>
   );
 }

@@ -20,16 +20,13 @@ export default function Sidebar() {
   ];
 
   return (
-    <aside
-      className="fixed bottom-4 left-4 top-4 z-[100] flex w-[calc(280px-32px)] flex-col rounded-[20px] border border-card-border bg-[#f4f2f2] px-5 py-7 shadow-md lg:hidden xl:flex"
-      style={{ height: "calc(100vh - 32px)" }}
-    >
+    <aside className="sticky top-8 z-[100] hidden h-[60vh] w-[248px] flex-col rounded-[20px] border border-card-border bg-[#f4f2f2] px-5 py-7 shadow-md xl:flex">
       {/* Logo */}
       <div className="mb-8 flex items-center gap-2.5 rounded-lg px-3 py-2">
         <div className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-lg bg-gradient-to-br from-indigo-500 to-purple-600">
           <Sparkles size={16} fill="white" strokeWidth={0} />
         </div>
-        <span className="text-[15px] font-bold text-text-primary">
+        <span className="text-base font-bold text-text-primary">
           DeepcampusAI
         </span>
       </div>
@@ -40,7 +37,7 @@ export default function Sidebar() {
           <Link
             key={item.label}
             href="#"
-            className={`flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm transition-all ${
+            className={`flex items-center gap-3 rounded-lg px-3 py-2.5 text-[15px] transition-all ${
               item.active
                 ? "bg-black font-medium text-white shadow-md hover:bg-gray-900"
                 : "font-normal text-gray-500 hover:bg-gray-100 hover:text-text-primary"
@@ -56,7 +53,7 @@ export default function Sidebar() {
       <div className="mt-auto border-t border-card-border pt-4">
         <Link
           href="#"
-          className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-normal text-gray-500 transition-all hover:bg-gray-100 hover:text-text-primary"
+          className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-[15px] font-normal text-gray-500 transition-all hover:bg-gray-100 hover:text-text-primary"
         >
           <LogOut size={18} strokeWidth={2} />
           <span>Log out</span>
