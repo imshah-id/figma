@@ -1,11 +1,11 @@
 .container {
-  margin-bottom: 48px;
+  flex-shrink: 0;
 }
 
 .sectionTitle {
-  font-size: 18px;
+  font-size: 16px;
   font-weight: 700;
-  margin-bottom: 24px;
+  margin-bottom: 16px;
   color: var(--text-primary);
 }
 
@@ -36,10 +36,10 @@
   background: var(--card-bg);
   border: 1px solid var(--card-border);
   border-radius: var(--radius);
-  padding: 24px;
+  padding: 16px;
   display: flex;
   flex-direction: column;
-  height: 180px; /* Fixed height for uniformity */
+  height: 120px;
   transition: all 0.2s;
 }
 

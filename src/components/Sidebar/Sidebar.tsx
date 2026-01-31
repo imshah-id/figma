@@ -26,7 +26,7 @@ export default function Sidebar() {
       <div className={styles.logo}>
         <div className={styles.logoIcon}>
           {/* Using Sparkles as a placeholder for the custom logo icon */}
-          <Sparkles size={20} fill="white" />
+          <Sparkles size={16} fill="white" strokeWidth={0} />
         </div>
         <span>DeepcampusAI</span>
       </div>
@@ -41,7 +41,7 @@ export default function Sidebar() {
               item.active && styles.navItemActive,
             )}
           >
-            <item.icon size={20} />
+            <item.icon size={18} strokeWidth={2} />
             <span>{item.label}</span>
           </Link>
         ))}
@@ -49,7 +49,7 @@ export default function Sidebar() {
 
       <div className={styles.bottomAction}>
         <Link href="#" className={styles.navItem}>
-          <LogOut size={20} />
+          <LogOut size={18} strokeWidth={2} />
           <span>Log out</span>
         </Link>
       </div>

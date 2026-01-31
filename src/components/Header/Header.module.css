@@ -2,20 +2,20 @@
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  margin-bottom: 48px;
+  flex-shrink: 0;
 }
 
 .title {
-  font-size: 28px;
-  font-weight: 800; /* Extra bold as per design */
-  margin-bottom: 8px;
+  font-size: 24px;
+  font-weight: 800;
+  margin-bottom: 4px;
   color: var(--text-primary);
   letter-spacing: -0.5px;
 }
 
 .subtitle {
   color: var(--text-secondary);
-  font-size: 15px;
+  font-size: 14px;
 }
 
 .aiButton {
