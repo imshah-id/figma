@@ -5,7 +5,6 @@
 html,
 body {
   max-width: 100vw;
-  max-height: 100vh;
   /* overflow: hidden; */
   font-family: var(--font-geist-sans), sans-serif;
   -webkit-font-smoothing: antialiased;
@@ -25,4 +24,30 @@ a {
 button {
   cursor: pointer;
   font: inherit;
+}
+
+/* Custom Scrollbar Styles - Thin & Premium */
+::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #e2e2e2;
+  border-radius: 20px;
+  transition: all 0.3s ease;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #d1d1d1;
+}
+
+/* Firefox Support */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #e2e2e2 transparent;
 }
