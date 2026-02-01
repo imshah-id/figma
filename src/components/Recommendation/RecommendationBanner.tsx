@@ -8,7 +8,7 @@ export default function RecommendationBanner() {
     <motion.div
       initial={{ opacity: 0, y: 15 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.15, ease: [0.23, 1, 0.32, 1] }}
+      transition={{ duration: 0.1, ease: [0.23, 1, 0.32, 1] }}
       className="relative flex w-full flex-col justify-between gap-8 overflow-hidden rounded-3xl border border-[#E5E7EB] bg-[linear-gradient(90deg,#E5E7EB_0%,#FFFFFF_50%,#E5E7EB_100%)] p-10 shadow-[0px_1px_2px_rgba(0,0,0,0.05),0px_12px_24px_-4px_rgba(0,0,0,0.12)] md:flex-row md:items-center"
     >
       <div className="relative z-10 flex flex-1 flex-col items-center gap-6 text-center md:flex-row md:items-start md:text-left">

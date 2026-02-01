@@ -13,6 +13,7 @@ import Step6Documents from "@/components/Onboarding/Step6Documents";
 import Step7Preferences from "@/components/Onboarding/Step7Preferences";
 import StepSelection from "@/components/Onboarding/StepSelection";
 import CalibrationIntro from "@/components/Onboarding/CalibrationIntro";
+import LiveInterview from "@/components/Onboarding/LiveInterview";
 
 export default function OnboardingPage() {
   const router = useRouter();
@@ -87,8 +88,11 @@ export default function OnboardingPage() {
   };
 
   const handleCalibrationStart = () => {
-    // Move to Step 1
-    setCurrentStep(1);
+    if (formData.setupMethod === "voice") {
+      setCurrentStep(0.6);
+    } else {
+      setCurrentStep(1);
+    }
   };
 
   const handleCalibrationBack = () => {
@@ -153,6 +157,18 @@ export default function OnboardingPage() {
         <CalibrationIntro
           onStart={handleCalibrationStart}
           onBack={handleCalibrationBack}
+        />
+      </div>
+    );
+  }
+
+  if (currentStep === 0.6) {
+    return (
+      <div className="min-h-screen w-full flex items-center justify-center p-4 bg-[url('/background.png')] bg-cover bg-center relative overflow-hidden">
+        <div className="absolute inset-0 bg-white/10 backdrop-blur-[2px]"></div>
+        <LiveInterview
+          onNext={() => setCurrentStep(1)}
+          onBack={() => setCurrentStep(0.5)}
         />
       </div>
     );

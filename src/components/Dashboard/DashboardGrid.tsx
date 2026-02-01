@@ -17,9 +17,9 @@ export default function DashboardGrid() {
       <motion.div
         initial={{ opacity: 0, y: 15 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.15, delay: 0.0, ease: [0.23, 1, 0.32, 1] }}
+        transition={{ duration: 0.1, delay: 0.0, ease: [0.23, 1, 0.32, 1] }}
         whileHover={{ y: -4 }}
-        className="flex min-h-[440px] h-full flex-col overflow-hidden rounded-2xl border border-[#E5E7EB] bg-white p-6 shadow-[0px_1px_2px_rgba(0,0,0,0.05),0px_8px_16px_-4px_rgba(0,0,0,0.1)] transition-all duration-300 hover:shadow-[0px_12px_24px_-12px_rgba(0,0,0,0.15)]"
+        className="flex min-h-[480px] h-full flex-col overflow-hidden rounded-2xl border border-[#E5E7EB] bg-white p-6 shadow-[0px_1px_2px_rgba(0,0,0,0.05),0px_8px_16px_-4px_rgba(0,0,0,0.1)] transition-all duration-300 hover:shadow-[0px_12px_24px_-12px_rgba(0,0,0,0.15)]"
       >
         <div className="mb-6">
           <h3 className="text-2xl font-bold text-gray-900 tracking-tight">
@@ -81,9 +81,9 @@ export default function DashboardGrid() {
       <motion.div
         initial={{ opacity: 0, y: 15 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.15, delay: 0.03, ease: [0.23, 1, 0.32, 1] }}
+        transition={{ duration: 0.1, delay: 0.01, ease: [0.23, 1, 0.32, 1] }}
         whileHover={{ y: -4 }}
-        className="flex min-h-[440px] h-full flex-col overflow-hidden rounded-2xl border border-[#E5E7EB] bg-white p-6 shadow-[0px_1px_2px_rgba(0,0,0,0.05),0px_8px_16px_-4px_rgba(0,0,0,0.1)] transition-all duration-300 hover:shadow-[0px_12px_24_px_-12px_rgba(0,0,0,0.15)]"
+        className="flex min-h-[480px] h-full flex-col overflow-hidden rounded-2xl border border-[#E5E7EB] bg-white p-6 shadow-[0px_1px_2px_rgba(0,0,0,0.05),0px_8px_16px_-4px_rgba(0,0,0,0.1)] transition-all duration-300 hover:shadow-[0px_12px_24px_-12px_rgba(0,0,0,0.15)]"
       >
         <div className="mb-6">
           <h3 className="text-2xl font-bold text-gray-900 tracking-tight">
@@ -124,9 +124,9 @@ export default function DashboardGrid() {
       <motion.div
         initial={{ opacity: 0, y: 15 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.15, delay: 0.06, ease: [0.23, 1, 0.32, 1] }}
+        transition={{ duration: 0.1, delay: 0.02, ease: [0.23, 1, 0.32, 1] }}
         whileHover={{ y: -4 }}
-        className="flex min-h-[440px] h-full flex-col overflow-hidden rounded-2xl border border-[#E5E7EB] bg-white p-6 shadow-[0px_1px_2px_rgba(0,0,0,0.05),0px_8px_16px_-4px_rgba(0,0,0,0.1)] transition-all duration-300 hover:shadow-[0px_12px_24px_-12px_rgba(0,0,0,0.15)]"
+        className="flex min-h-[480px] h-full flex-col overflow-hidden rounded-2xl border border-[#E5E7EB] bg-white p-6 shadow-[0px_1px_2px_rgba(0,0,0,0.05),0px_8px_16px_-4px_rgba(0,0,0,0.1)] transition-all duration-300 hover:shadow-[0px_12px_24px_-12px_rgba(0,0,0,0.15)]"
       >
         <div className="mb-4">
           <div className="flex items-center justify-between">

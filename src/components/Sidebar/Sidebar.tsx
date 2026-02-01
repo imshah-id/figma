@@ -25,7 +25,7 @@ export default function Sidebar() {
     <motion.aside
       initial={{ opacity: 0, x: -20 }}
       animate={{ opacity: 1, x: 0 }}
-      transition={{ duration: 0.15, ease: [0.23, 1, 0.32, 1] }}
+      transition={{ duration: 0.1, ease: [0.23, 1, 0.32, 1] }}
       className="sticky top-6 z-[100] hidden h-[calc(100vh-3rem)] w-60 flex-col rounded-[32px] border border-[#f2f4f6] bg-[#f2f2f2] px-4 py-6 shadow-sm lg:flex"
     >
       {/* Logo */}
@@ -50,8 +50,8 @@ export default function Sidebar() {
             initial={{ opacity: 0, x: -10 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{
-              duration: 0.15,
-              delay: index * 0.03,
+              duration: 0.1,
+              delay: index * 0.01,
               ease: [0.23, 1, 0.32, 1],
             }}
           >
@@ -94,7 +94,7 @@ export default function Sidebar() {
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        transition={{ delay: 0.3, duration: 0.2 }}
+        transition={{ delay: 0.1, duration: 0.1 }}
         className="mt-auto flex w-full flex-col items-start border-t border-solid border-[#f2f4f6] pt-6"
       >
         <Link

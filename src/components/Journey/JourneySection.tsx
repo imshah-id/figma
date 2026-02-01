@@ -47,7 +47,7 @@ export default function JourneySection() {
     <motion.section
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.3, delay: 0.0 }}
+      transition={{ duration: 0.1, delay: 0.0 }}
       className="mb-8 lg:mb-4 flex-shrink-0"
     >
       <h3 className="mb-6 text-lg font-bold tracking-tight text-text-primary">
@@ -69,7 +69,7 @@ export default function JourneySection() {
                 key={step.id}
                 initial={{ opacity: 0, x: -10 }}
                 animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.3, delay: index * 0.1 }}
+                transition={{ duration: 0.1, delay: index * 0.01 }}
                 className="relative flex items-stretch gap-6 pb-8 last:pb-0"
               >
                 {/* Indicator Container */}
@@ -158,8 +158,8 @@ export default function JourneySection() {
               initial={{ opacity: 0, y: 15 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{
-                duration: 0.15,
-                delay: index * 0.03,
+                duration: 0.1,
+                delay: index * 0.01,
                 ease: [0.23, 1, 0.32, 1],
               }}
               whileHover={{ y: -4 }}
