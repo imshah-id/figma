@@ -10,6 +10,8 @@ import {
 } from "lucide-react";
 import { motion } from "framer-motion";
 
+import { useRouter } from "next/navigation";
+
 export default function DashboardGrid({
   profile,
   stats = { shortlisted: 0, locked: 0, completedTasks: 0, totalTasks: 3 },
@@ -22,6 +24,8 @@ export default function DashboardGrid({
     totalTasks: number;
   };
 }) {
+  const router = useRouter();
+
   return (
     <div className="grid flex-1 grid-cols-1 items-start gap-6 md:grid-cols-2 lg:grid-cols-3">
       {/* Profile Strength Widget */}
@@ -82,6 +86,7 @@ export default function DashboardGrid({
         </div>
         <motion.button
           whileTap={{ scale: 0.98 }}
+          onClick={() => router.push("/profile")} // Placeholder if /profile doesn't exist yet, but good intent
           className="mt-6 flex h-12 w-full items-center justify-center gap-2 rounded-xl border border-[#E5E7EB] bg-white text-base font-bold text-gray-700 shadow-sm transition-all hover:bg-gray-50"
         >
           View Full Profile <ArrowRight size={14} />
@@ -129,6 +134,7 @@ export default function DashboardGrid({
         </div>
         <motion.button
           whileTap={{ scale: 0.98 }}
+          onClick={() => router.push("/universities")}
           className="mt-6 flex h-12 w-full items-center justify-center gap-2 rounded-xl border border-[#E5E7EB] bg-white text-base font-bold text-gray-700 shadow-sm transition-all hover:bg-gray-50"
         >
           Explore Universities <ArrowRight size={14} />
@@ -189,6 +195,7 @@ export default function DashboardGrid({
 
         <motion.button
           whileTap={{ scale: 0.98 }}
+          onClick={() => router.push("/tasks")}
           className="mt-6 flex h-12 w-full items-center justify-center gap-2 rounded-xl border border-[#E5E7EB] bg-white text-base font-bold text-gray-700 shadow-sm transition-all hover:bg-gray-50"
         >
           View All Tasks <ArrowRight size={14} />

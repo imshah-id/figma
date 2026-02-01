@@ -15,14 +15,15 @@ const HIPO_API_BASE = "http://universities.hipolabs.com";
  * @returns A list of universities matching the search query.
  */
 export async function searchHipoUniversities(
-  name: string,
+  name: string = "",
+  country: string = "",
 ): Promise<HipoUniversity[]> {
-  if (!name || name.length < 3) return [];
-
   try {
-    const response = await fetch(
-      `${HIPO_API_BASE}/search?name=${encodeURIComponent(name)}`,
-    );
+    let url = `${HIPO_API_BASE}/search?`;
+    if (name) url += `name=${encodeURIComponent(name)}&`;
+    if (country) url += `country=${encodeURIComponent(country)}`;
+
+    const response = await fetch(url);
     if (!response.ok) {
       throw new Error(`Hipo API error: ${response.statusText}`);
     }

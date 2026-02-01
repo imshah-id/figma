@@ -12,16 +12,18 @@ import {
 } from "lucide-react";
 import { motion } from "framer-motion";
 
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 
 export default function Sidebar() {
   const router = useRouter();
+  const pathname = usePathname();
+
   const navItems = [
-    { label: "Dashboard", icon: LayoutGrid, active: true },
-    { label: "AI Counsellor", icon: MessageSquare, active: false },
-    { label: "Universities", icon: School, active: false },
-    { label: "Tasks", icon: CheckSquare, active: false },
-    { label: "Profile", icon: User, active: false },
+    { label: "Dashboard", icon: LayoutGrid, href: "/dashboard" },
+    { label: "AI Counsellor", icon: MessageSquare, href: "/counsellor" },
+    { label: "Universities", icon: School, href: "/universities" },
+    { label: "Tasks", icon: CheckSquare, href: "/tasks" },
+    { label: "Profile", icon: User, href: "/profile" },
   ];
 
   const handleLogout = async () => {
@@ -56,50 +58,53 @@ export default function Sidebar() {
 
       {/* Navigation */}
       <nav className="flex w-full flex-1 flex-col gap-2">
-        {navItems.map((item, index) => (
-          <motion.div
-            key={item.label}
-            initial={{ opacity: 0, x: -10 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{
-              duration: 0.1,
-              delay: index * 0.01,
-              ease: [0.23, 1, 0.32, 1],
-            }}
-          >
-            <Link
-              href="#"
-              className={`flex h-12 w-full items-center gap-3 rounded-[16.4px] px-4 transition-all duration-200 ${
-                item.active
-                  ? "bg-black text-white shadow-[0px_4px_6px_-4px_#0000001a,0px_10px_15px_-3px_#0000001a]"
-                  : "text-[#697282] hover:bg-white hover:text-text-primary hover:shadow-sm"
-              }`}
+        {navItems.map((item, index) => {
+          const isActive = pathname === item.href;
+          return (
+            <motion.div
+              key={item.label}
+              initial={{ opacity: 0, x: -10 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{
+                duration: 0.1,
+                delay: index * 0.01,
+                ease: [0.23, 1, 0.32, 1],
+              }}
             >
-              <motion.div
-                whileHover={!item.active ? { scale: 1.1 } : {}}
-                className="relative flex h-5 w-5 items-center justify-center"
+              <Link
+                href={item.href}
+                className={`flex h-12 w-full items-center gap-3 rounded-[16.4px] px-4 transition-all duration-200 ${
+                  isActive
+                    ? "bg-black text-white shadow-[0px_4px_6px_-4px_#0000001a,0px_10px_15px_-3px_#0000001a]"
+                    : "text-[#697282] hover:bg-white hover:text-text-primary hover:shadow-sm"
+                }`}
               >
-                <item.icon
-                  size={20}
-                  strokeWidth={1.5}
-                  className={item.active ? "text-white" : "text-currentColor"}
-                />
-              </motion.div>
-              <span className="whitespace-nowrap text-base font-medium leading-6">
-                {item.label}
-              </span>
-              {item.active && (
                 <motion.div
-                  initial={{ opacity: 0, x: -5 }}
-                  animate={{ opacity: 0.6, x: 0 }}
-                  className="ml-auto"
+                  whileHover={!isActive ? { scale: 1.1 } : {}}
+                  className="relative flex h-5 w-5 items-center justify-center"
                 >
-                  <span className="text-xs">›</span>
+                  <item.icon
+                    size={20}
+                    strokeWidth={1.5}
+                    className={isActive ? "text-white" : "text-currentColor"}
+                  />
                 </motion.div>
-              )}
-            </Link>
-          </motion.div>
-        ))}
+                <span className="whitespace-nowrap text-base font-medium leading-6">
+                  {item.label}
+                </span>
+                {isActive && (
+                  <motion.div
+                    initial={{ opacity: 0, x: -5 }}
+                    animate={{ opacity: 0.6, x: 0 }}
+                    className="ml-auto"
+                  >
+                    <span className="text-xs">›</span>
+                  </motion.div>
+                )}
+              </Link>
+            </motion.div>
+          );
+        })}
       </nav>
 
       {/* Bottom Action */}
