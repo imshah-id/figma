@@ -10,7 +10,18 @@ import {
 } from "lucide-react";
 import { motion } from "framer-motion";
 
-export default function DashboardGrid() {
+export default function DashboardGrid({
+  profile,
+  stats = { shortlisted: 0, locked: 0, completedTasks: 0, totalTasks: 3 },
+}: {
+  profile?: any;
+  stats?: {
+    shortlisted: number;
+    locked: number;
+    completedTasks: number;
+    totalTasks: number;
+  };
+}) {
   return (
     <div className="grid flex-1 grid-cols-1 items-start gap-6 md:grid-cols-2 lg:grid-cols-3">
       {/* Profile Strength Widget */}
@@ -93,13 +104,17 @@ export default function DashboardGrid() {
         <div className="flex flex-1 flex-col gap-6">
           <div className="grid grid-cols-2 gap-4">
             <div className="flex flex-col items-center justify-center rounded-2xl bg-[#F9FAFB] border border-[#E5E7EB]/50 py-6 text-center shadow-sm">
-              <span className="text-4xl font-black text-gray-900">0</span>
+              <span className="text-4xl font-black text-gray-900">
+                {stats.shortlisted}
+              </span>
               <span className="text-xs font-bold uppercase tracking-wider text-gray-400 mt-1">
                 Shortlisted
               </span>
             </div>
             <div className="flex flex-col items-center justify-center rounded-2xl bg-[#F9FAFB] border border-[#E5E7EB]/50 py-6 text-center shadow-sm">
-              <span className="text-4xl font-black text-gray-900">0</span>
+              <span className="text-4xl font-black text-gray-900">
+                {stats.locked}
+              </span>
               <span className="text-xs font-bold uppercase tracking-wider text-gray-400 mt-1">
                 Locked
               </span>

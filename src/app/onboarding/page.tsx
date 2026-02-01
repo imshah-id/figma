@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
 import OnboardingLayout from "@/components/Onboarding/OnboardingLayout";
+import { toast } from "sonner";
 import Step1Identity from "@/components/Onboarding/Step1Identity";
 import Step2StudyIntent from "@/components/Onboarding/Step2StudyIntent";
 import Step3Budget from "@/components/Onboarding/Step3Budget";
@@ -103,9 +104,40 @@ export default function OnboardingPage() {
     router.push("/");
   };
 
-  const handleComplete = () => {
-    console.log("Onboarding Complete! Data:", formData);
-    router.push("/");
+  const handleComplete = async () => {
+    // Submit data to API
+    try {
+      const response = await fetch("/api/onboarding", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          ...formData, // Spread all fields
+          isFinal: true, // Mark as final submission
+
+          // Map frontend fields to backend schema expectation if needed
+          targetDegree: formData.degree,
+          targetMajor: formData.major,
+          targetIntake: formData.startYear,
+          gpa: formData.gpa,
+          budget: formData.budget,
+          preferredCountries: formData.preferences,
+          // Add default or mapped fields
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to save profile");
+      }
+
+      console.log("Onboarding Complete!");
+      router.push("/dashboard");
+    } catch (error) {
+      console.error("Submission error", error);
+      // Fallback redirect for now, or show error
+      router.push("/dashboard");
+    }
   };
 
   const renderStep = () => {

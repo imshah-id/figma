@@ -4,13 +4,17 @@ import React, { useState } from "react";
 import Link from "next/link";
 import { Eye, EyeOff, ArrowLeft } from "lucide-react";
 import { motion } from "framer-motion";
+import { useRouter } from "next/navigation";
 
 export default function LoginPage() {
+  const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState({
     email: "",
     password: "",
   });
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -18,6 +22,31 @@ export default function LoginPage() {
 
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
+  };
+
+  const handleLogin = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+    setError("");
+
+    try {
+      const res = await fetch("/api/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        throw new Error(data.error || "Login failed");
+      }
+
+      router.push("/dashboard");
+    } catch (err: any) {
+      setError(err.message || "Failed to login");
+      setLoading(false);
+    }
   };
 
   return (
@@ -46,7 +75,13 @@ export default function LoginPage() {
           </p>
         </div>
 
-        <form className="space-y-5">
+        <form onSubmit={handleLogin} className="space-y-5">
+          {error && (
+            <div className="p-3 text-sm text-red-600 bg-red-50 rounded-lg border border-red-100">
+              {error}
+            </div>
+          )}
+
           <div className="space-y-2">
             <label className="text-sm font-semibold text-slate-700">
               Email Address
@@ -58,6 +93,7 @@ export default function LoginPage() {
               value={formData.email}
               onChange={handleChange}
               className="w-full px-4 py-3.5 rounded-xl border border-slate-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-100 outline-none transition-all placeholder:text-slate-400 text-slate-800"
+              required
             />
           </div>
 
@@ -73,6 +109,7 @@ export default function LoginPage() {
                 value={formData.password}
                 onChange={handleChange}
                 className="w-full px-4 py-3.5 rounded-xl border border-slate-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-100 outline-none transition-all placeholder:text-slate-400 text-slate-800 pr-12"
+                required
               />
               <button
                 type="button"
@@ -93,10 +130,11 @@ export default function LoginPage() {
           </div>
 
           <button
-            type="button"
-            className="w-full bg-[#2563EB] hover:bg-blue-700 text-white font-semibold py-3.5 rounded-xl transition-all shadow-lg hover:shadow-blue-200 mt-2"
+            type="submit"
+            disabled={loading}
+            className="w-full bg-[#2563EB] hover:bg-blue-700 text-white font-semibold py-3.5 rounded-xl transition-all shadow-lg hover:shadow-blue-200 mt-2 disabled:opacity-70 disabled:cursor-not-allowed"
           >
-            Log In
+            {loading ? "Logging In..." : "Log In"}
           </button>
         </form>
 

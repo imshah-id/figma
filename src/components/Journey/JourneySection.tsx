@@ -11,34 +11,68 @@ import {
 } from "lucide-react";
 import { motion } from "framer-motion";
 
-export default function JourneySection() {
+export default function JourneySection({
+  currentStage = "PROFILE",
+}: {
+  currentStage?: string;
+}) {
+  // Map stages to IDs for comparison
+  const stageMap: Record<string, number> = {
+    PROFILE: 1,
+    DISCOVERY: 2,
+    SHORTLIST: 3,
+    GUIDANCE: 4,
+  };
+
+  const currentStageId = stageMap[currentStage] || 1;
+
   const steps = [
     {
       id: 1,
       title: "Building Profile",
       description: "Complete your information",
-      status: "completed",
+      status:
+        currentStageId > 1
+          ? "completed"
+          : currentStageId === 1
+            ? "active"
+            : "upcoming",
       icon: User,
     },
     {
       id: 2,
       title: "Discovering Universities",
       description: "Explore your options",
-      status: "active",
+      status:
+        currentStageId > 2
+          ? "completed"
+          : currentStageId === 2
+            ? "active"
+            : "upcoming",
       icon: Search,
     },
     {
       id: 3,
       title: "Finalizing Universities",
       description: "Lock your choices",
-      status: "upcoming",
+      status:
+        currentStageId > 3
+          ? "completed"
+          : currentStageId === 3
+            ? "active"
+            : "upcoming",
       icon: Lock,
     },
     {
       id: 4,
       title: "Preparing Applications",
       description: "Submit your applications",
-      status: "upcoming",
+      status:
+        currentStageId > 4
+          ? "completed"
+          : currentStageId === 4
+            ? "active"
+            : "upcoming",
       icon: FileText,
     },
   ];

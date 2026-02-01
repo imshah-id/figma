@@ -4,7 +4,11 @@ import { Sparkles } from "lucide-react";
 import { motion } from "framer-motion";
 import MobileNav from "./MobileNav";
 
-export default function Header() {
+export default function Header({
+  userName = "Student",
+}: {
+  userName?: string;
+}) {
   return (
     <motion.header
       initial={{ opacity: 0, y: -20 }}
@@ -43,7 +47,7 @@ export default function Header() {
       {/* Identity Section (Welcome Text) - Always shown, but layout changes at lg */}
       <div className="flex flex-col lg:pt-4">
         <h1 className="mb-0.5 text-2xl font-bold tracking-tight text-text-primary md:text-3xl lg:text-4xl lg:mb-1 lg:text-[34px] lg:leading-[40px]">
-          Welcome back, Student
+          Welcome back, {userName}
         </h1>
         <p className="text-sm text-text-secondary md:text-base lg:text-lg">
           Here&apos;s your study abroad journey overview

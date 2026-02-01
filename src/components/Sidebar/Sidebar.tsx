@@ -12,7 +12,10 @@ import {
 } from "lucide-react";
 import { motion } from "framer-motion";
 
+import { useRouter } from "next/navigation";
+
 export default function Sidebar() {
+  const router = useRouter();
   const navItems = [
     { label: "Dashboard", icon: LayoutGrid, active: true },
     { label: "AI Counsellor", icon: MessageSquare, active: false },
@@ -20,6 +23,15 @@ export default function Sidebar() {
     { label: "Tasks", icon: CheckSquare, active: false },
     { label: "Profile", icon: User, active: false },
   ];
+
+  const handleLogout = async () => {
+    try {
+      await fetch("/api/auth/logout", { method: "POST" });
+      router.push("/login");
+    } catch (error) {
+      console.error("Logout failed:", error);
+    }
+  };
 
   return (
     <motion.aside
@@ -97,8 +109,8 @@ export default function Sidebar() {
         transition={{ delay: 0.1, duration: 0.1 }}
         className="mt-auto flex w-full flex-col items-start border-t border-solid border-[#f2f4f6] pt-6"
       >
-        <Link
-          href="#"
+        <button
+          onClick={handleLogout}
           className="flex h-5 w-full items-center gap-2 rounded-[16.4px] px-4 text-[#697282] transition-all hover:text-text-primary"
         >
           <div className="relative h-4 w-4">
@@ -107,7 +119,7 @@ export default function Sidebar() {
           <span className="whitespace-nowrap text-sm font-normal leading-5">
             Log out
           </span>
-        </Link>
+        </button>
       </motion.div>
     </motion.aside>
   );
