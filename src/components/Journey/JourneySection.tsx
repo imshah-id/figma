@@ -35,7 +35,7 @@ export default function JourneySection() {
     <motion.section
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5, delay: 0.2 }}
+      transition={{ duration: 0.3, delay: 0.0 }}
       className="flex-shrink-0"
     >
       <h3 className="mb-4 text-lg font-bold text-text-primary">Your Journey</h3>
@@ -49,7 +49,7 @@ export default function JourneySection() {
               key={step.id}
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.25 + index * 0.05 }}
+              transition={{ duration: 0.1, delay: 0.0 + index * 0.05 }}
               whileHover={{ y: -4 }}
               className="flex flex-col gap-4"
             >

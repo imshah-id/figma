@@ -17,7 +17,7 @@ export default function DashboardGrid() {
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5, delay: 0.35 }}
+        transition={{ duration: 0.1, delay: 0.0 }}
         whileHover={{ y: -4 }}
         className="flex h-[350px] flex-col overflow-hidden rounded-xl border border-card-border bg-card p-4 transition-shadow hover:shadow-lg"
       >
@@ -70,7 +70,7 @@ export default function DashboardGrid() {
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5, delay: 0.4 }}
+        transition={{ duration: 0.1, delay: 0.0 }}
         whileHover={{ y: -4 }}
         className="flex h-[350px] flex-col overflow-hidden rounded-xl border border-card-border bg-card p-4 transition-shadow hover:shadow-lg"
       >
@@ -114,7 +114,7 @@ export default function DashboardGrid() {
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5, delay: 0.45 }}
+        transition={{ duration: 0.1, delay: 0.0 }}
         whileHover={{ y: -4 }}
         className="flex h-[350px] flex-col overflow-hidden rounded-xl border border-card-border bg-card p-4 transition-shadow hover:shadow-lg"
       >
