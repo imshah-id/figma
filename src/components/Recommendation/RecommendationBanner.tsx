@@ -13,8 +13,8 @@ export default function RecommendationBanner() {
     >
       <div className="relative z-10 flex flex-1 flex-col items-center gap-6 text-center md:flex-row md:items-start md:text-left">
         {/* Icon Container */}
-        <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-2xl bg-white shadow-sm ring-1 ring-gray-100 transition-transform group-hover:scale-110">
-          <Sparkles className="text-gray-900" size={28} />
+        <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-2xl bg-black shadow-lg transition-transform group-hover:scale-110">
+          <Sparkles className="text-white" size={28} />
         </div>
 
         <div className="max-w-2xl space-y-1">
@@ -22,26 +22,27 @@ export default function RecommendationBanner() {
             AI Recommendation
           </h2>
           <p className="text-lg font-bold leading-relaxed text-gray-600">
-            Enhance your profile by adding your extracurricular activities to
-            increase your admission chances.
+            Based on your profile, I recommend focusing on completing your lock
+            more university options and strengthen your applications.
           </p>
         </div>
       </div>
 
-      <div className="relative z-10 flex w-full items-center gap-3 md:w-auto">
+      <div className="relative z-10 flex w-full flex-col items-center gap-3 md:w-auto md:flex-row">
         <motion.button
           whileHover={{ y: -2 }}
           whileTap={{ scale: 0.98 }}
-          className="h-12 flex-1 rounded-xl border border-gray-200 bg-white px-6 text-base font-bold text-gray-700 shadow-sm transition-all hover:bg-gray-50 md:flex-none"
+          className="h-12 w-full rounded-xl bg-black px-8 text-base font-bold text-white shadow-md transition-all hover:bg-neutral-800 md:w-auto"
         >
-          Later
+          Get Personalized Guidance
         </motion.button>
         <motion.button
           whileHover={{ y: -2 }}
           whileTap={{ scale: 0.98 }}
-          className="h-12 flex-1 rounded-xl bg-black px-6 text-base font-bold text-white shadow-md transition-all hover:bg-neutral-800 md:flex-none"
+          className="flex h-12 w-full items-center justify-center gap-2 rounded-xl border border-[#E5E7EB] bg-white px-8 text-base font-bold text-gray-700 shadow-sm transition-all hover:bg-gray-50 md:w-auto"
         >
-          Add Now
+          <BookOpen size={18} className="text-gray-700" />
+          View Recommended Universities
         </motion.button>
       </div>
     </motion.div>

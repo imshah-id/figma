@@ -6,6 +6,13 @@ module.exports = {
     "./src/app/**/*.{js,ts,jsx,tsx,mdx}",
   ],
   theme: {
+    screens: {
+      sm: "640px",
+      md: "768px",
+      lg: "1020px",
+      xl: "1280px",
+      "2xl": "1536px",
+    },
     extend: {
       colors: {
         background: "#F8FAFC",
@@ -36,6 +43,7 @@ module.exports = {
         "deepcampusairoyal-blue": "var(--deepcampusairoyal-blue)",
       },
       fontFamily: {
+        sans: ["var(--font-inter)", "sans-serif"],
         "deepcampus-ai-arial-regular":
           "var(--deepcampus-ai-arial-regular-font-family)",
         "deepcampus-ai-inter-regular":

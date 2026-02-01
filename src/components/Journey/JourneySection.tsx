@@ -48,7 +48,7 @@ export default function JourneySection() {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.3, delay: 0.0 }}
-      className="mb-8 xl:mb-4 flex-shrink-0"
+      className="mb-8 lg:mb-4 flex-shrink-0"
     >
       <h3 className="mb-6 text-lg font-bold tracking-tight text-text-primary">
         Your Journey
@@ -146,7 +146,7 @@ export default function JourneySection() {
       </div>
 
       {/* Desktop Grid Layout (hidden on mobile) */}
-      <div className="hidden grid-cols-1 gap-6 md:grid md:grid-cols-2 xl:grid-cols-4">
+      <div className="hidden grid-cols-1 gap-6 md:grid md:grid-cols-2 lg:grid-cols-4">
         {steps.map((step, index) => {
           const isCompleted = step.status === "completed";
           const isActive = step.status === "active";

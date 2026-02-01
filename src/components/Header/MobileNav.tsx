@@ -26,7 +26,7 @@ export default function MobileNav() {
   ];
 
   return (
-    <div className="xl:hidden">
+    <div className="lg:hidden">
       <button
         onClick={() => setIsOpen(true)}
         className="flex h-10 w-10 items-center justify-center rounded-lg border border-card-border bg-card text-text-primary"
@@ -55,13 +55,13 @@ export default function MobileNav() {
               className="fixed bottom-0 left-0 top-0 z-[120] flex w-[280px] flex-col bg-[#f4f2f2] p-6 shadow-2xl"
             >
               <div className="mb-8 flex items-center justify-between">
-                <div className="flex items-center gap-2.5">
+                <div className="flex items-center gap-2">
                   <img
                     src="/Ellipse 11.png"
                     alt="DeepcampusAI Logo"
-                    className="h-8 w-8 object-contain"
+                    className="h-7 w-7 object-contain"
                   />
-                  <span className="text-base font-bold text-text-primary">
+                  <span className="text-sm font-bold text-text-primary">
                     DeepcampusAI
                   </span>
                 </div>

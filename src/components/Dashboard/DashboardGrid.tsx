@@ -12,7 +12,7 @@ import { motion } from "framer-motion";
 
 export default function DashboardGrid() {
   return (
-    <div className="grid flex-1 grid-cols-1 items-start gap-6 md:grid-cols-2 xl:grid-cols-3">
+    <div className="grid flex-1 grid-cols-1 items-start gap-6 md:grid-cols-2 lg:grid-cols-3">
       {/* Profile Strength Widget */}
       <motion.div
         initial={{ opacity: 0, y: 15 }}
@@ -60,7 +60,7 @@ export default function DashboardGrid() {
               <span
                 className={`rounded-full px-5 py-2 text-xs font-bold shadow-sm ${
                   item.type === "success"
-                    ? "bg-green-50/50 text-green-600"
+                    ? "bg-[#B5FFCF] text-[#166534]"
                     : "bg-[#F3F4F6] text-gray-800"
                 }`}
               >

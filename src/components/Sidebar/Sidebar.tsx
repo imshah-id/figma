@@ -26,17 +26,17 @@ export default function Sidebar() {
       initial={{ opacity: 0, x: -20 }}
       animate={{ opacity: 1, x: 0 }}
       transition={{ duration: 0.15, ease: [0.23, 1, 0.32, 1] }}
-      className="sticky top-6 z-[100] hidden h-[calc(100vh-3rem)] w-60 flex-col rounded-[32px] border border-[#f2f4f6] bg-[#f2f2f2] p-6 shadow-sm lg:flex"
+      className="sticky top-6 z-[100] hidden h-[calc(100vh-3rem)] w-60 flex-col rounded-[32px] border border-[#f2f4f6] bg-[#f2f2f2] px-4 py-6 shadow-sm lg:flex"
     >
       {/* Logo */}
-      <div className="mb-8 flex items-center px-1">
-        <Link href="/" className="flex items-center gap-3">
+      <div className="mb-8 flex items-center">
+        <Link href="/" className="flex items-center gap-2">
           <img
             src="/Ellipse 11.png"
             alt="DeepcampusAI Logo"
-            className="h-10 w-10 object-contain"
+            className="h-9 w-9 object-contain"
           />
-          <span className="whitespace-nowrap font-['Inter'] text-xl font-bold tracking-[-0.50px] leading-7 text-neutral-950">
+          <span className="whitespace-nowrap text-lg font-bold tracking-[-0.50px] leading-7 text-neutral-950">
             DeepcampusAI
           </span>
         </Link>
@@ -73,7 +73,7 @@ export default function Sidebar() {
                   className={item.active ? "text-white" : "text-currentColor"}
                 />
               </motion.div>
-              <span className="whitespace-nowrap font-['Inter'] text-base font-medium leading-6">
+              <span className="whitespace-nowrap text-base font-medium leading-6">
                 {item.label}
               </span>
               {item.active && (
@@ -104,7 +104,7 @@ export default function Sidebar() {
           <div className="relative h-4 w-4">
             <LogOut size={16} strokeWidth={1.5} />
           </div>
-          <span className="whitespace-nowrap font-['Inter'] text-sm font-normal leading-5">
+          <span className="whitespace-nowrap text-sm font-normal leading-5">
             Log out
           </span>
         </Link>
