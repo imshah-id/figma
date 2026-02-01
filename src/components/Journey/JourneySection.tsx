@@ -118,7 +118,7 @@ export default function JourneySection() {
                 >
                   <div className="mb-1.5 flex items-center justify-between">
                     <span
-                      className={`text-[10px] font-black uppercase tracking-[0.1em] 
+                      className={`text-xs font-black uppercase tracking-[0.1em] 
                       ${isCompleted ? "text-accent-green" : isActive ? "text-primary" : "text-gray-400"}`}
                     >
                       Stage {step.id}
@@ -130,12 +130,12 @@ export default function JourneySection() {
                     )}
                   </div>
                   <h4
-                    className={`text-base font-bold tracking-tight transition-colors 
+                    className={`text-lg font-bold tracking-tight transition-colors 
                     ${isActive ? "text-text-primary" : "text-gray-600"}`}
                   >
                     {step.title}
                   </h4>
-                  <p className="mt-1 text-[13px] leading-relaxed text-text-secondary/80">
+                  <p className="mt-1 text-sm leading-relaxed text-text-secondary/80">
                     {step.description}
                   </p>
                 </div>
@@ -146,7 +146,7 @@ export default function JourneySection() {
       </div>
 
       {/* Desktop Grid Layout (hidden on mobile) */}
-      <div className="hidden grid-cols-1 gap-4 md:grid md:grid-cols-2 xl:grid-cols-4">
+      <div className="hidden grid-cols-1 gap-6 md:grid md:grid-cols-2 xl:grid-cols-4">
         {steps.map((step, index) => {
           const isCompleted = step.status === "completed";
           const isActive = step.status === "active";
@@ -168,57 +168,55 @@ export default function JourneySection() {
               {/* Top Bar */}
               <div
                 className={`relative h-1.5 w-full rounded-full transition-colors duration-300 ${
-                  isCompleted || isActive ? "bg-black" : "bg-gray-200"
+                  index < 2 ? "bg-black" : "bg-gray-200"
                 }`}
               />
 
-              {/* Card */}
               <div
-                className={`relative mb-[-22.00px] flex h-44 xl:h-36 w-full flex-col items-start justify-around rounded-[16.4px] border border-solid pb-0 pl-5 pr-0 pt-5 transition-all duration-200
+                className={`relative flex h-auto min-h-[150px] w-full flex-col items-start justify-start rounded-2xl border bg-white p-6 shadow-[0px_1px_2px_rgba(0,0,0,0.05),0px_4px_8px_-2px_rgba(0,0,0,0.06)] transition-all duration-200
                   ${
                     isActive
-                      ? "border-black bg-gray-50 shadow-[0px_4px_12px_rgba(0,0,0,0.05)] ring-1 ring-black/5"
-                      : "border-gray-200 bg-white hover:border-gray-300 hover:shadow-md"
+                      ? "border-2 border-black"
+                      : "border-[#E5E7EB] hover:border-gray-300"
                   }
                 `}
               >
-                <div className="relative flex h-[92px] w-[165.75px] flex-col items-start gap-2">
+                <div className="flex w-full flex-col items-start gap-4">
                   {/* Icon & Label Row */}
-                  <div className="relative flex h-4 w-full items-center gap-2 self-stretch">
-                    <div className="relative flex h-4 w-4 items-center justify-center">
-                      {isActive ? (
-                        <div className="relative h-2.5 w-2.5 rounded-full bg-black opacity-[0.78]" />
+                  <div className="flex w-full items-center justify-between">
+                    <div className="flex items-center gap-2.5">
+                      {isCompleted ? (
+                        <div className="flex h-6 w-6 items-center justify-center rounded-full bg-green-50 text-green-600 shadow-sm">
+                          <CircleCheck size={16} strokeWidth={2.5} />
+                        </div>
+                      ) : isActive ? (
+                        <div className="flex h-6 w-6 items-center justify-center">
+                          <div className="h-3 w-3 rounded-full bg-black shadow-sm" />
+                        </div>
                       ) : (
-                        <Icon
-                          size={16}
-                          className={`${isCompleted ? "text-black" : "text-[#697282]"}`}
-                        />
+                        <div className="flex h-6 w-6 items-center justify-center opacity-40">
+                          <Clock size={16} />
+                        </div>
                       )}
-                    </div>
 
-                    <div className="relative h-4 w-[60px]">
-                      <div
-                        className={`absolute left-0 top-px text-xs font-semibold uppercase leading-4 tracking-[0.30px] ${
-                          isActive ? "text-black" : "text-[#697282]"
-                        }`}
+                      <span
+                        className={`text-xs font-black uppercase tracking-widest ${isActive ? "text-black" : "text-gray-400"}`}
                       >
                         STAGE {step.id}
-                      </div>
+                      </span>
                     </div>
                   </div>
 
-                  {/* Title */}
-                  <div className="relative h-[24px] w-full self-stretch">
-                    <div className="absolute left-0 top-0 whitespace-nowrap text-base font-bold leading-6 tracking-[0] text-[#101727]">
+                  {/* Title & Description */}
+                  <div className="space-y-1.5">
+                    <h4
+                      className={`text-lg font-bold leading-tight tracking-tight ${isActive ? "text-black" : "text-gray-900"}`}
+                    >
                       {step.title}
-                    </div>
-                  </div>
-
-                  {/* Description */}
-                  <div className="relative mb-[-4.00px] h-5 w-full self-stretch">
-                    <div className="absolute left-0 top-px whitespace-nowrap text-sm font-normal leading-5 tracking-[0] text-[#697282]">
+                    </h4>
+                    <p className="text-sm font-medium leading-relaxed text-gray-500 line-clamp-2">
                       {step.description}
-                    </div>
+                    </p>
                   </div>
                 </div>
               </div>

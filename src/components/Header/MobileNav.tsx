@@ -59,7 +59,7 @@ export default function MobileNav() {
                   <img
                     src="/Ellipse 11.png"
                     alt="DeepcampusAI Logo"
-                    className="h-8 w-8 object-contain mix-blend-multiply"
+                    className="h-8 w-8 object-contain"
                   />
                   <span className="text-base font-bold text-text-primary">
                     DeepcampusAI

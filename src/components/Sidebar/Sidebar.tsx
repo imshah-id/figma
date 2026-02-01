@@ -26,7 +26,7 @@ export default function Sidebar() {
       initial={{ opacity: 0, x: -20 }}
       animate={{ opacity: 1, x: 0 }}
       transition={{ duration: 0.15, ease: [0.23, 1, 0.32, 1] }}
-      className="sticky top-8 z-[100] hidden h-[calc(100vh-4rem)] w-64 flex-col rounded-[21px] border-r border-solid border-[#f2f4f6] bg-[#f2f2f2] p-6 lg:flex"
+      className="sticky top-6 z-[100] hidden h-[calc(100vh-3rem)] w-60 flex-col rounded-[32px] border border-[#f2f4f6] bg-[#f2f2f2] p-6 shadow-sm lg:flex"
     >
       {/* Logo */}
       <div className="mb-8 flex items-center px-1">
@@ -34,7 +34,7 @@ export default function Sidebar() {
           <img
             src="/Ellipse 11.png"
             alt="DeepcampusAI Logo"
-            className="h-10 w-10 object-contain mix-blend-multiply"
+            className="h-10 w-10 object-contain"
           />
           <span className="whitespace-nowrap font-['Inter'] text-xl font-bold tracking-[-0.50px] leading-7 text-neutral-950">
             DeepcampusAI
