@@ -51,3 +51,198 @@ button {
   scrollbar-width: thin;
   scrollbar-color: #e2e2e2 transparent;
 }
+
+/* --- User Provided Global Styles --- */
+
+@layer components {
+  .all-\[unset\] {
+    all: unset;
+  }
+}
+
+:root {
+  --deepcampus-ai-arial-regular-font-family: "Arial", Helvetica;
+  --deepcampus-ai-arial-regular-font-size: 14px;
+  --deepcampus-ai-arial-regular-font-style: normal;
+  --deepcampus-ai-arial-regular-font-weight: 400;
+  --deepcampus-ai-arial-regular-letter-spacing: 0.25px;
+  --deepcampus-ai-arial-regular-line-height: 21px;
+  --deepcampus-ai-inter-regular-font-family: var(--font-inter), Helvetica;
+  --deepcampus-ai-inter-regular-font-size: 13px;
+  --deepcampus-ai-inter-regular-font-style: normal;
+  --deepcampus-ai-inter-regular-font-weight: 400;
+  --deepcampus-ai-inter-regular-letter-spacing: 0px;
+  --deepcampus-ai-inter-regular-line-height: 20px;
+  --deepcampus-ai-inter-semi-bold-font-family: var(--font-inter), Helvetica;
+  --deepcampus-ai-inter-semi-bold-font-size: 14px;
+  --deepcampus-ai-inter-semi-bold-font-style: normal;
+  --deepcampus-ai-inter-semi-bold-font-weight: 600;
+  --deepcampus-ai-inter-semi-bold-letter-spacing: 0px;
+  --deepcampus-ai-inter-semi-bold-line-height: 20px;
+  --deepcampus-ai-semantic-button-font-family: var(--font-inter), Helvetica;
+  --deepcampus-ai-semantic-button-font-size: 16px;
+  --deepcampus-ai-semantic-button-font-style: normal;
+  --deepcampus-ai-semantic-button-font-weight: 600;
+  --deepcampus-ai-semantic-button-letter-spacing: 0px;
+  --deepcampus-ai-semantic-button-line-height: 24px;
+  --deepcampus-ai-semantic-heading-1-font-family: var(--font-inter), Helvetica;
+  --deepcampus-ai-semantic-heading-1-font-size: 28px;
+  --deepcampus-ai-semantic-heading-1-font-style: normal;
+  --deepcampus-ai-semantic-heading-1-font-weight: 700;
+  --deepcampus-ai-semantic-heading-1-letter-spacing: 0.382999986410141px;
+  --deepcampus-ai-semantic-heading-1-line-height: 42px;
+  --deepcampus-ai-semantic-input-font-family: var(--font-inter), Helvetica;
+  --deepcampus-ai-semantic-input-font-size: 16px;
+  --deepcampus-ai-semantic-input-font-style: normal;
+  --deepcampus-ai-semantic-input-font-weight: 400;
+  --deepcampus-ai-semantic-input-letter-spacing: 0px;
+  --deepcampus-ai-semantic-input-line-height: normal;
+  --deepcampus-ai-semantic-label-font-family: var(--font-inter), Helvetica;
+  --deepcampus-ai-semantic-label-font-size: 14px;
+  --deepcampus-ai-semantic-label-font-style: normal;
+  --deepcampus-ai-semantic-label-font-weight: 500;
+  --deepcampus-ai-semantic-label-letter-spacing: 0px;
+  --deepcampus-ai-semantic-label-line-height: 20px;
+  --deepcampus-ai-semantic-link-font-family: var(--font-inter), Helvetica;
+  --deepcampus-ai-semantic-link-font-size: 14px;
+  --deepcampus-ai-semantic-link-font-style: normal;
+  --deepcampus-ai-semantic-link-font-weight: 500;
+  --deepcampus-ai-semantic-link-letter-spacing: 0px;
+  --deepcampus-ai-semantic-link-line-height: 20px;
+  --deepcampusairoyal-blue: rgba(39, 98, 234, 1);
+  --guiding-light-dash-lovable-app-inter-regular-font-family:
+    var(--font-inter), Helvetica;
+  --guiding-light-dash-lovable-app-inter-regular-font-size: 20px;
+  --guiding-light-dash-lovable-app-inter-regular-font-style: normal;
+  --guiding-light-dash-lovable-app-inter-regular-font-weight: 400;
+  --guiding-light-dash-lovable-app-inter-regular-letter-spacing: 0px;
+  --guiding-light-dash-lovable-app-inter-regular-line-height: 28px;
+  --guiding-light-dash-lovable-app-semantic-heading-1-font-family:
+    var(--font-inter), Helvetica;
+  --guiding-light-dash-lovable-app-semantic-heading-1-font-size: 36px;
+  --guiding-light-dash-lovable-app-semantic-heading-1-font-style: normal;
+  --guiding-light-dash-lovable-app-semantic-heading-1-font-weight: 700;
+  --guiding-light-dash-lovable-app-semantic-heading-1-letter-spacing: 0px;
+  --guiding-light-dash-lovable-app-semantic-heading-1-line-height: 40px;
+  --guiding-light-dash-lovable-app-semantic-link-font-family:
+    "Roboto", Helvetica;
+  --guiding-light-dash-lovable-app-semantic-link-font-size: 12px;
+  --guiding-light-dash-lovable-app-semantic-link-font-style: normal;
+  --guiding-light-dash-lovable-app-semantic-link-font-weight: 400;
+  --guiding-light-dash-lovable-app-semantic-link-letter-spacing: 0px;
+  --guiding-light-dash-lovable-app-semantic-link-line-height: 12px;
+  --guiding-light-dash-lovable-app-semantic-link-underline-font-family:
+    var(--font-inter), Helvetica;
+  --guiding-light-dash-lovable-app-semantic-link-underline-font-size: 16px;
+  --guiding-light-dash-lovable-app-semantic-link-underline-font-style: normal;
+  --guiding-light-dash-lovable-app-semantic-link-underline-font-weight: 400;
+  --guiding-light-dash-lovable-app-semantic-link-underline-letter-spacing: 0px;
+  --guiding-light-dash-lovable-app-semantic-link-underline-line-height: 24px;
+}
+
+:root {
+  --animate-spin: spin 1s linear infinite;
+}
+
+.animate-fade-in {
+  animation: fade-in 1s var(--animation-delay, 0s) ease forwards;
+}
+
+.animate-fade-up {
+  animation: fade-up 1s var(--animation-delay, 0s) ease forwards;
+}
+
+.animate-marquee {
+  animation: marquee var(--duration) infinite linear;
+}
+
+.animate-marquee-vertical {
+  animation: marquee-vertical var(--duration) linear infinite;
+}
+
+.animate-shimmer {
+  animation: shimmer 8s infinite;
+}
+
+.animate-spin {
+  animation: var(--animate-spin);
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(1turn);
+  }
+}
+
+@keyframes image-glow {
+  0% {
+    opacity: 0;
+    animation-timing-function: cubic-bezier(0.74, 0.25, 0.76, 1);
+  }
+
+  10% {
+    opacity: 0.7;
+    animation-timing-function: cubic-bezier(0.12, 0.01, 0.08, 0.99);
+  }
+
+  to {
+    opacity: 0.4;
+  }
+}
+
+@keyframes fade-in {
+  0% {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes fade-up {
+  0% {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes shimmer {
+  0%,
+  90%,
+  to {
+    background-position: calc(-100% - var(--shimmer-width)) 0;
+  }
+
+  30%,
+  60% {
+    background-position: calc(100% + var(--shimmer-width)) 0;
+  }
+}
+
+@keyframes marquee {
+  0% {
+    transform: translate(0);
+  }
+
+  to {
+    transform: translateX(calc(-100% - var(--gap)));
+  }
+}
+
+@keyframes marquee-vertical {
+  0% {
+    transform: translateY(0);
+  }
+
+  to {
+    transform: translateY(calc(-100% - var(--gap)));
+  }
+}

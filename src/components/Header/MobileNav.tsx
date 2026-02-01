@@ -56,9 +56,11 @@ export default function MobileNav() {
             >
               <div className="mb-8 flex items-center justify-between">
                 <div className="flex items-center gap-2.5">
-                  <div className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-lg bg-gradient-to-br from-indigo-500 to-purple-600">
-                    <Sparkles size={16} fill="white" strokeWidth={0} />
-                  </div>
+                  <img
+                    src="/Ellipse 11.png"
+                    alt="DeepcampusAI Logo"
+                    className="h-8 w-8 object-contain mix-blend-multiply"
+                  />
                   <span className="text-base font-bold text-text-primary">
                     DeepcampusAI
                   </span>

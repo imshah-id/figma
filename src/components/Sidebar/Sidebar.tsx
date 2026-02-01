@@ -25,47 +25,90 @@ export default function Sidebar() {
     <motion.aside
       initial={{ opacity: 0, x: -20 }}
       animate={{ opacity: 1, x: 0 }}
-      transition={{ duration: 0.3, delay: 0 }}
-      className="sticky top-8 z-[100] hidden h-[60vh] w-[248px] flex-col rounded-[20px] border border-card-border bg-[#f4f2f2] px-5 py-7 shadow-md xl:flex"
+      transition={{ duration: 0.15, ease: [0.23, 1, 0.32, 1] }}
+      className="sticky top-8 z-[100] hidden h-[calc(100vh-4rem)] w-64 flex-col rounded-[21px] border-r border-solid border-[#f2f4f6] bg-[#f2f2f2] p-6 lg:flex"
     >
       {/* Logo */}
-      <div className="mb-8 flex items-center gap-2.5 rounded-lg px-3 py-2">
-        <div className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-lg bg-gradient-to-br from-indigo-500 to-purple-600">
-          <Sparkles size={16} fill="white" strokeWidth={0} />
-        </div>
-        <span className="text-base font-bold text-text-primary">
-          DeepcampusAI
-        </span>
+      <div className="mb-8 flex items-center px-1">
+        <Link href="/" className="flex items-center gap-3">
+          <img
+            src="/Ellipse 11.png"
+            alt="DeepcampusAI Logo"
+            className="h-10 w-10 object-contain mix-blend-multiply"
+          />
+          <span className="whitespace-nowrap font-['Inter'] text-xl font-bold tracking-[-0.50px] leading-7 text-neutral-950">
+            DeepcampusAI
+          </span>
+        </Link>
       </div>
 
       {/* Navigation */}
-      <nav className="flex flex-1 flex-col gap-1">
-        {navItems.map((item) => (
-          <Link
+      <nav className="flex w-full flex-1 flex-col gap-2">
+        {navItems.map((item, index) => (
+          <motion.div
             key={item.label}
-            href="#"
-            className={`flex items-center gap-3 rounded-lg px-3 py-2.5 text-[15px] transition-all ${
-              item.active
-                ? "bg-black font-medium text-white shadow-md hover:bg-gray-900"
-                : "font-normal text-gray-500 hover:bg-gray-100 hover:text-text-primary"
-            }`}
+            initial={{ opacity: 0, x: -10 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{
+              duration: 0.15,
+              delay: index * 0.03,
+              ease: [0.23, 1, 0.32, 1],
+            }}
           >
-            <item.icon size={18} strokeWidth={2} />
-            <span>{item.label}</span>
-          </Link>
+            <Link
+              href="#"
+              className={`flex h-12 w-full items-center gap-3 rounded-[16.4px] px-4 transition-all duration-200 ${
+                item.active
+                  ? "bg-black text-white shadow-[0px_4px_6px_-4px_#0000001a,0px_10px_15px_-3px_#0000001a]"
+                  : "text-[#697282] hover:bg-white hover:text-text-primary hover:shadow-sm"
+              }`}
+            >
+              <motion.div
+                whileHover={!item.active ? { scale: 1.1 } : {}}
+                className="relative flex h-5 w-5 items-center justify-center"
+              >
+                <item.icon
+                  size={20}
+                  strokeWidth={1.5}
+                  className={item.active ? "text-white" : "text-currentColor"}
+                />
+              </motion.div>
+              <span className="whitespace-nowrap font-['Inter'] text-base font-medium leading-6">
+                {item.label}
+              </span>
+              {item.active && (
+                <motion.div
+                  initial={{ opacity: 0, x: -5 }}
+                  animate={{ opacity: 0.6, x: 0 }}
+                  className="ml-auto"
+                >
+                  <span className="text-xs">›</span>
+                </motion.div>
+              )}
+            </Link>
+          </motion.div>
         ))}
       </nav>
 
       {/* Bottom Action */}
-      <div className="mt-auto border-t border-card-border pt-4">
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 0.3, duration: 0.2 }}
+        className="mt-auto flex w-full flex-col items-start border-t border-solid border-[#f2f4f6] pt-6"
+      >
         <Link
           href="#"
-          className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-[15px] font-normal text-gray-500 transition-all hover:bg-gray-100 hover:text-text-primary"
+          className="flex h-5 w-full items-center gap-2 rounded-[16.4px] px-4 text-[#697282] transition-all hover:text-text-primary"
         >
-          <LogOut size={18} strokeWidth={2} />
-          <span>Log out</span>
+          <div className="relative h-4 w-4">
+            <LogOut size={16} strokeWidth={1.5} />
+          </div>
+          <span className="whitespace-nowrap font-['Inter'] text-sm font-normal leading-5">
+            Log out
+          </span>
         </Link>
-      </div>
+      </motion.div>
     </motion.aside>
   );
 }

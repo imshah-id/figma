@@ -1,6 +1,14 @@
 "use client";
 import React from "react";
-import { CircleCheck, Circle, Clock } from "lucide-react";
+import {
+  CircleCheck,
+  Circle,
+  Clock,
+  User,
+  Search,
+  Lock,
+  FileText,
+} from "lucide-react";
 import { motion } from "framer-motion";
 
 export default function JourneySection() {
@@ -10,24 +18,28 @@ export default function JourneySection() {
       title: "Building Profile",
       description: "Complete your information",
       status: "completed",
+      icon: User,
     },
     {
       id: 2,
       title: "Discovering Universities",
       description: "Explore your options",
       status: "active",
+      icon: Search,
     },
     {
       id: 3,
       title: "Finalizing Universities",
       description: "Lock your choices",
       status: "upcoming",
+      icon: Lock,
     },
     {
       id: 4,
       title: "Preparing Applications",
       description: "Submit your applications",
       status: "upcoming",
+      icon: FileText,
     },
   ];
 
@@ -36,7 +48,7 @@ export default function JourneySection() {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.3, delay: 0.0 }}
-      className="flex-shrink-0"
+      className="mb-8 xl:mb-4 flex-shrink-0"
     >
       <h3 className="mb-6 text-lg font-bold tracking-tight text-text-primary">
         Your Journey
@@ -134,56 +146,81 @@ export default function JourneySection() {
       </div>
 
       {/* Desktop Grid Layout (hidden on mobile) */}
-      <div className="hidden grid-cols-1 gap-6 md:grid md:grid-cols-2 xl:grid-cols-4">
+      <div className="hidden grid-cols-1 gap-4 md:grid md:grid-cols-2 xl:grid-cols-4">
         {steps.map((step, index) => {
           const isCompleted = step.status === "completed";
           const isActive = step.status === "active";
+          const Icon = step.icon;
 
           return (
             <motion.div
               key={step.id}
-              initial={{ opacity: 0, y: 20 }}
+              initial={{ opacity: 0, y: 15 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.1, delay: 0.0 + index * 0.05 }}
+              transition={{
+                duration: 0.15,
+                delay: index * 0.03,
+                ease: [0.23, 1, 0.32, 1],
+              }}
               whileHover={{ y: -4 }}
-              className="flex flex-col gap-4"
+              className="relative flex h-full w-full flex-col items-start gap-4"
             >
-              {isActive ? (
-                <motion.div
-                  animate={{ opacity: [0.6, 1, 0.6] }}
-                  transition={{
-                    duration: 2,
-                    repeat: Infinity,
-                    ease: "easeInOut",
-                  }}
-                  className="h-1 w-full rounded-sm bg-text-primary"
-                />
-              ) : (
-                <div
-                  className={`h-1 w-full rounded-sm ${isCompleted ? "bg-text-primary" : "bg-gray-200"}`}
-                />
-              )}
+              {/* Top Bar */}
               <div
-                className={`flex min-h-[110px] flex-col rounded-xl border bg-card p-4 transition-all md:h-[130px] ${isActive ? "border-text-primary bg-gray-50" : "border-card-border"}`}
+                className={`relative h-1.5 w-full rounded-full transition-colors duration-300 ${
+                  isCompleted || isActive ? "bg-black" : "bg-gray-200"
+                }`}
+              />
+
+              {/* Card */}
+              <div
+                className={`relative mb-[-22.00px] flex h-44 xl:h-36 w-full flex-col items-start justify-around rounded-[16.4px] border border-solid pb-0 pl-5 pr-0 pt-5 transition-all duration-200
+                  ${
+                    isActive
+                      ? "border-black bg-gray-50 shadow-[0px_4px_12px_rgba(0,0,0,0.05)] ring-1 ring-black/5"
+                      : "border-gray-200 bg-white hover:border-gray-300 hover:shadow-md"
+                  }
+                `}
               >
-                <div
-                  className={`mb-3 flex items-center gap-2 text-xs font-bold uppercase tracking-wide ${isCompleted ? "text-accent-green" : isActive ? "text-text-primary" : "text-text-tertiary"}`}
-                >
-                  {isCompleted ? (
-                    <CircleCheck size={14} />
-                  ) : isActive ? (
-                    <Circle size={14} fill="currentColor" />
-                  ) : (
-                    <Clock size={14} />
-                  )}
-                  <span>Stage {step.id}</span>
+                <div className="relative flex h-[92px] w-[165.75px] flex-col items-start gap-2">
+                  {/* Icon & Label Row */}
+                  <div className="relative flex h-4 w-full items-center gap-2 self-stretch">
+                    <div className="relative flex h-4 w-4 items-center justify-center">
+                      {isActive ? (
+                        <div className="relative h-2.5 w-2.5 rounded-full bg-black opacity-[0.78]" />
+                      ) : (
+                        <Icon
+                          size={16}
+                          className={`${isCompleted ? "text-black" : "text-[#697282]"}`}
+                        />
+                      )}
+                    </div>
+
+                    <div className="relative h-4 w-[60px]">
+                      <div
+                        className={`absolute left-0 top-px text-xs font-semibold uppercase leading-4 tracking-[0.30px] ${
+                          isActive ? "text-black" : "text-[#697282]"
+                        }`}
+                      >
+                        STAGE {step.id}
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Title */}
+                  <div className="relative h-[24px] w-full self-stretch">
+                    <div className="absolute left-0 top-0 whitespace-nowrap text-base font-bold leading-6 tracking-[0] text-[#101727]">
+                      {step.title}
+                    </div>
+                  </div>
+
+                  {/* Description */}
+                  <div className="relative mb-[-4.00px] h-5 w-full self-stretch">
+                    <div className="absolute left-0 top-px whitespace-nowrap text-sm font-normal leading-5 tracking-[0] text-[#697282]">
+                      {step.description}
+                    </div>
+                  </div>
                 </div>
-                <h4 className="mb-2 text-[17px] font-bold text-text-primary">
-                  {step.title}
-                </h4>
-                <p className="text-sm leading-relaxed text-text-secondary">
-                  {step.description}
-                </p>
               </div>
             </motion.div>
           );

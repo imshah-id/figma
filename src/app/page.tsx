@@ -6,11 +6,11 @@ import RecommendationBanner from "@/components/Recommendation/RecommendationBann
 
 export default function Home() {
   return (
-    <div className="flex min-h-screen items-start justify-center bg-background">
+    <div className="flex min-h-screen items-start justify-center bg-white">
       <div className="relative flex w-full max-w-[1800px] justify-center gap-6 px-4 py-6 md:gap-12 md:px-6 md:py-8 xl:pl-8 xl:pr-8 xl:py-4">
         <Sidebar />
         <main className="w-full max-w-[1440px]">
-          <div className="flex flex-col gap-4 md:gap-6">
+          <div className="flex flex-col gap-4 md:gap-6 xl:gap-3 xl:h-[calc(100vh-4rem)]">
             <Header />
             <JourneySection />
             <DashboardGrid />
