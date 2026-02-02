@@ -23,6 +23,8 @@ export async function POST(req: Request) {
       testScore,
       budget,
       preferredCountries,
+      sopStatus,
+      lorCount,
       isFinal, // New flag
     } = body;
 
@@ -52,6 +54,8 @@ export async function POST(req: Request) {
         preferredCountries: preferredCountries
           ? JSON.stringify(preferredCountries)
           : undefined,
+        sopStatus,
+        lorCount,
         ...stageUpdate,
       },
       create: {
@@ -70,6 +74,8 @@ export async function POST(req: Request) {
         preferredCountries: preferredCountries
           ? JSON.stringify(preferredCountries)
           : "[]",
+        sopStatus: sopStatus || "",
+        lorCount: lorCount || "",
         currentStage: isFinal ? "DISCOVERY" : "PROFILE",
         readinessScore: 30,
       },

@@ -13,6 +13,7 @@ export async function POST(req: Request) {
       );
     }
 
+    // Check if user already exists
     const existingUser = await prisma.user.findUnique({
       where: { email },
     });
@@ -24,45 +25,21 @@ export async function POST(req: Request) {
       );
     }
 
+    // Hash password and create user
     const hashedPassword = await hashPassword(password);
-
     const user = await prisma.user.create({
       data: {
         fullName,
         email,
         passwordHash: hashedPassword,
-        profile: {
-          create: {
-            targetDegree: "Masters", // Defaults (will be updated in Onboarding)
-            targetIntake: "Fall 2026",
-            gpa: "",
-            budget: "",
-            preferredCountries: "", // Empty JSON string or null
-            currentStage: "PROFILE",
-          },
-        },
       },
     });
 
-    // Auto-login
     await setSession(user.id, user.email);
 
     return NextResponse.json({ success: true, userId: user.id });
   } catch (error) {
     console.error("Signup error:", error);
-
-    // Fallback/Workaround for Offline/Unstable Database
-    // If DB connection fails (P1001), allow signup with mock user
-    if (
-      (error as any).code === "P1001" ||
-      (error as any).message?.includes("Can't reach database")
-    ) {
-      console.warn("Database unreachable. Using offline fallback mode.");
-      // Create a mock session
-      await setSession("mock-user-id", "offline-user@example.com");
-      return NextResponse.json({ success: true, userId: "mock-user-id" });
-    }
-
     return NextResponse.json(
       { error: "Internal Server Error" },
       { status: 500 },

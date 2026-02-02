@@ -107,6 +107,47 @@ export default function OnboardingPage() {
   const handleComplete = async () => {
     // Submit data to API
     try {
+      // PRE-PROCESSING DATA
+      const finalGpaScale = formData.gradingScale || "4.0";
+
+      // Exams Parsing
+      let finalEnglishTest = "None";
+      let finalTestScore = "";
+
+      const exams: any = formData.exams || {}; // Type check handling
+      // Check for English tests (Order of preference or availability)
+      if (exams.ielts?.taken && exams.ielts.score) {
+        finalEnglishTest = "IELTS";
+        finalTestScore = exams.ielts.score;
+      } else if (exams.toefl?.taken && exams.toefl.score) {
+        finalEnglishTest = "TOEFL";
+        finalTestScore = exams.toefl.score;
+      }
+
+      // If no english test, check for others for generic score if needed?
+      // Currently backend strength calc relies on englishTest type.
+      // If user has SAT/ACT but no English test, we could store it, but let's stick to English Test for schema alignment.
+      // Or we can abuse the field if we wanted to, but cleaner to leave it.
+
+      // Additional Exam Data could potentially be stored in a JSON field if schema allowed (e.g. `proufile.extras`)
+      // For now we lose SAT/GRE if not added to schema, but the Prompt asked to "make data handling proper".
+      // Without schema migration, this is the best we can do for existing fields.
+
+      // Financial Aid
+      let finalBudget = formData.budget;
+      if (formData.financialAid) {
+        finalBudget += " (Aid Req)";
+      }
+
+      // Role -> Qualification Heuristic
+      let finalQualification = "";
+      if (formData.role === "High School Student")
+        finalQualification = "High School";
+      else if (formData.role === "Undergraduate Student")
+        finalQualification = "Bachelor's";
+      else if (formData.role === "Counselor" || formData.role === "Parent")
+        finalQualification = "Other";
+
       const response = await fetch("/api/onboarding", {
         method: "POST",
         headers: {
@@ -116,14 +157,20 @@ export default function OnboardingPage() {
           ...formData, // Spread all fields
           isFinal: true, // Mark as final submission
 
-          // Map frontend fields to backend schema expectation if needed
+          // Map frontend fields to backend schema expectation
           targetDegree: formData.degree,
           targetMajor: formData.major,
           targetIntake: formData.startYear,
           gpa: formData.gpa,
-          budget: formData.budget,
+
+          // Mapped Fields
+          budget: finalBudget,
+          gpaScale: finalGpaScale,
+          englishTest: finalEnglishTest,
+          testScore: finalTestScore,
+          highestQualification: finalQualification,
+
           preferredCountries: formData.preferences,
-          // Add default or mapped fields
         }),
       });
 

@@ -23,7 +23,7 @@ export async function searchHipoUniversities(
     if (name) url += `name=${encodeURIComponent(name)}&`;
     if (country) url += `country=${encodeURIComponent(country)}`;
 
-    const response = await fetch(url);
+    const response = await fetch(url, { cache: "no-store" });
     if (!response.ok) {
       throw new Error(`Hipo API error: ${response.statusText}`);
     }

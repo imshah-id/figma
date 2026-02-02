@@ -8,11 +8,11 @@ datasource db {
 }
 
 model User {
-  id           String      @id @default(uuid())
-  email        String      @unique
+  id           String        @id @default(uuid())
+  email        String        @unique
   fullName     String
   passwordHash String
-  createdAt    DateTime    @default(now())
+  createdAt    DateTime      @default(now())
   profile      Profile?
   shortlist    Shortlist[]
   documents    Document[]
@@ -27,28 +27,30 @@ model Document {
   category  String   @default("General") // "Resume", "SOP", "Transcript"
   mimeType  String
   size      Int
-  data      String   // Base64 storage - Hackathon only!
+  data      String // Base64 storage - Hackathon only!
   createdAt DateTime @default(now())
 }
 
 model Profile {
-  id                 String  @id @default(uuid())
-  userId             String  @unique
-  user               User    @relation(fields: [userId], references: [id])
-  targetDegree       String
-  targetMajor        String? // e.g. "Computer Science"
+  id                   String  @id @default(uuid())
+  userId               String  @unique
+  user                 User    @relation(fields: [userId], references: [id])
+  targetDegree         String
+  targetMajor          String? // e.g. "Computer Science"
   highestQualification String?
-  fieldOfStudy       String?
-  citizenship        String?
-  targetIntake       String
-  gpa                String
-  gpaScale           String  @default("4.0")
-  englishTest        String?
-  testScore          String?
-  budget             String
-  preferredCountries String // Stored as JSON string
-  readinessScore     Int     @default(0)
-  currentStage       String  @default("DISCOVERY") // ENUM: "PROFILE", "DISCOVERY", "SHORTLIST", "GUIDANCE"
+  fieldOfStudy         String?
+  citizenship          String?
+  targetIntake         String
+  gpa                  String
+  gpaScale             String  @default("4.0")
+  englishTest          String?
+  testScore            String?
+  budget               String
+  preferredCountries   String // Stored as JSON string
+  sopStatus            String?
+  lorCount             String?
+  readinessScore       Int     @default(0)
+  currentStage         String  @default("DISCOVERY") // ENUM: "PROFILE", "DISCOVERY", "SHORTLIST", "GUIDANCE"
 }
 
 model University {
@@ -59,7 +61,9 @@ model University {
   rank           Int
   fees           String
   acceptanceRate String
+  website        String?
   tags           String // JSON string of tags
+  aiAnalysis     String? // JSON string of AI insights
   shortlistedBy  Shortlist[]
 
   @@index([country])
@@ -68,13 +72,13 @@ model University {
 }
 
 model Shortlist {
-  id           String     @id @default(uuid())
-  userId       String
-  user         User       @relation(fields: [userId], references: [id])
-  universityId String
-  university   University @relation(fields: [universityId], references: [id])
-  isLocked     Boolean        @default(false)
-  createdAt    DateTime       @default(now())
+  id            String         @id @default(uuid())
+  userId        String
+  user          User           @relation(fields: [userId], references: [id])
+  universityId  String
+  university    University     @relation(fields: [universityId], references: [id])
+  isLocked      Boolean        @default(false)
+  createdAt     DateTime       @default(now())
   guidanceTasks GuidanceTask[]
 
   @@unique([userId, universityId])
@@ -86,21 +90,22 @@ model GuidanceTask {
   shortlistId String
   shortlist   Shortlist @relation(fields: [shortlistId], references: [id], onDelete: Cascade)
   title       String
-  type        String    // Essay, Admin, Documents
+  type        String // Essay, Admin, Documents
   status      String    @default("pending") // pending, completed
-  dueDate     String?   // mocked for now, or DateTime
+  dueDate     String? // mocked for now, or DateTime
 
   @@index([shortlistId])
 }
 
 model ChatSession {
-  id        String   @id @default(uuid())
-  userId    String
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  title     String
-  messages  String   // Stored as JSON string [ {role: "user", content: "..."}, ... ]
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id          String   @id @default(uuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  title       String
+  personality String   @default("friendly") // friendly, strict, professional
+  messages    String // Stored as JSON string [ {role: "user", content: "..."}, ... ]
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 
   @@index([userId])
 }

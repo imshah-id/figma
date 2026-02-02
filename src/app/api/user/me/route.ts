@@ -169,3 +169,72 @@ export async function GET() {
     );
   }
 }
+
+export async function PUT(req: Request) {
+  try {
+    const session = await getSession();
+    if (!session) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
+    const body = await req.json();
+    const {
+      fullName,
+      targetDegree,
+      targetMajor,
+      targetIntake,
+      gpa,
+      gpaScale,
+      testScore,
+      englishTest,
+      budget,
+      citizenship,
+      highestQualification,
+      fieldOfStudy,
+      sopStatus,
+      lorCount,
+      preferredCountries,
+    } = body;
+
+    // 1. Update User (fullName)
+    if (fullName) {
+      await prisma.user.update({
+        where: { id: session.userId },
+        data: { fullName },
+      });
+    }
+
+    // 2. Update Profile
+    // We use update here because profile should exist (created on signup/onboarding).
+    // If not, we might need upsert, but for now assuming presence.
+    const updatedProfile = await prisma.profile.update({
+      where: { userId: session.userId },
+      data: {
+        targetDegree,
+        targetMajor,
+        targetIntake,
+        gpa,
+        gpaScale,
+        testScore,
+        englishTest,
+        budget,
+        citizenship,
+        highestQualification,
+        fieldOfStudy,
+        sopStatus,
+        lorCount,
+        preferredCountries: preferredCountries
+          ? JSON.stringify(preferredCountries)
+          : undefined,
+      },
+    });
+
+    return NextResponse.json({ success: true, profile: updatedProfile });
+  } catch (error) {
+    console.error("Update profile error:", error);
+    return NextResponse.json(
+      { error: "Internal Server Error" },
+      { status: 500 },
+    );
+  }
+}

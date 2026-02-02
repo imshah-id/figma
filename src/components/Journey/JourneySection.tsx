@@ -11,71 +11,53 @@ import {
 } from "lucide-react";
 import { motion } from "framer-motion";
 
+import { STAGES, getStageIndex, STAGE_LABELS } from "@/lib/constants";
+
 export default function JourneySection({
-  currentStage = "PROFILE",
+  currentStage = STAGES.PROFILE,
 }: {
   currentStage?: string;
 }) {
-  // Map stages to IDs for comparison
-  const stageMap: Record<string, number> = {
-    PROFILE: 1,
-    DISCOVERY: 2,
-    SHORTLIST: 3,
-    GUIDANCE: 4,
-  };
-
-  const currentStageId = stageMap[currentStage] || 1;
+  const currentStageId = getStageIndex(currentStage) + 1;
 
   const steps = [
     {
       id: 1,
-      title: "Building Profile",
+      key: STAGES.PROFILE,
+      title: STAGE_LABELS.PROFILE,
       description: "Complete your information",
-      status:
-        currentStageId > 1
-          ? "completed"
-          : currentStageId === 1
-            ? "active"
-            : "upcoming",
       icon: User,
     },
     {
       id: 2,
-      title: "Discovering Universities",
+      key: STAGES.DISCOVERY,
+      title: STAGE_LABELS.DISCOVERY,
       description: "Explore your options",
-      status:
-        currentStageId > 2
-          ? "completed"
-          : currentStageId === 2
-            ? "active"
-            : "upcoming",
       icon: Search,
     },
     {
       id: 3,
-      title: "Finalizing Universities",
+      key: STAGES.SHORTLIST,
+      title: STAGE_LABELS.SHORTLIST,
       description: "Lock your choices",
-      status:
-        currentStageId > 3
-          ? "completed"
-          : currentStageId === 3
-            ? "active"
-            : "upcoming",
       icon: Lock,
     },
     {
       id: 4,
-      title: "Preparing Applications",
+      key: STAGES.GUIDANCE,
+      title: STAGE_LABELS.GUIDANCE,
       description: "Submit your applications",
-      status:
-        currentStageId > 4
-          ? "completed"
-          : currentStageId === 4
-            ? "active"
-            : "upcoming",
       icon: FileText,
     },
-  ];
+  ].map((step) => ({
+    ...step,
+    status:
+      currentStageId > step.id
+        ? "completed"
+        : currentStageId === step.id
+          ? "active"
+          : "upcoming",
+  }));
 
   return (
     <motion.section
@@ -202,7 +184,7 @@ export default function JourneySection({
               {/* Top Bar */}
               <div
                 className={`relative h-1.5 w-full rounded-full transition-colors duration-300 ${
-                  index < 2 ? "bg-black" : "bg-gray-200"
+                  isCompleted || isActive ? "bg-black" : "bg-gray-200"
                 }`}
               />
 

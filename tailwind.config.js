@@ -41,6 +41,14 @@ module.exports = {
           tertiary: "#94A3B8",
         },
         "deepcampusairoyal-blue": "var(--deepcampusairoyal-blue)",
+        navy: {
+          800: "#112240",
+          900: "#0a192f",
+        },
+        gold: {
+          400: "#fbbf24",
+          500: "#f59e0b",
+        },
       },
       fontFamily: {
         sans: ["var(--font-inter)", "sans-serif"],

@@ -46,20 +46,25 @@ export default function DashboardGrid({
             {
               icon: BookOpen,
               label: "Academics",
-              status: "Strong",
-              type: "success",
+              status: profile?.gpa ? "Strong" : "Pending",
+              type: profile?.gpa ? "success" : "gray",
             },
             {
               icon: FileText,
               label: "Exams",
-              status: "Not Started",
-              type: "gray",
+              status: profile?.testScore ? "Done" : "Pending",
+              type: profile?.testScore ? "success" : "gray",
             },
             {
               icon: GraduationCap,
               label: "SOP",
-              status: "Not Started",
-              type: "gray",
+              status:
+                profile?.sopStatus === "completed"
+                  ? "Done"
+                  : profile?.sopStatus === "drafting"
+                    ? "Drafting"
+                    : "Not Started",
+              type: profile?.sopStatus === "completed" ? "success" : "gray",
             },
           ].map((item) => (
             <div
@@ -84,13 +89,36 @@ export default function DashboardGrid({
             </div>
           ))}
         </div>
-        <motion.button
-          whileTap={{ scale: 0.98 }}
-          onClick={() => router.push("/profile")} // Placeholder if /profile doesn't exist yet, but good intent
-          className="mt-6 flex h-12 w-full items-center justify-center gap-2 rounded-xl border border-[#E5E7EB] bg-white text-base font-bold text-gray-700 shadow-sm transition-all hover:bg-gray-50"
-        >
-          View Full Profile <ArrowRight size={14} />
-        </motion.button>
+        <div className="mt-6 flex gap-3">
+          {profile?.currentStage === "PROFILE" ? (
+            <motion.button
+              whileTap={{ scale: 0.98 }}
+              onClick={async () => {
+                try {
+                  await fetch("/api/profile/advance", {
+                    method: "POST",
+                    body: JSON.stringify({ targetStage: "DISCOVERY" }),
+                    headers: { "Content-Type": "application/json" },
+                  });
+                  router.refresh();
+                } catch (e) {
+                  console.error(e);
+                }
+              }}
+              className="flex h-12 w-full items-center justify-center gap-2 rounded-xl bg-black text-white text-base font-bold shadow-md transition-all hover:bg-gray-800"
+            >
+              Complete & Unlock Discovery <ArrowRight size={14} />
+            </motion.button>
+          ) : (
+            <motion.button
+              whileTap={{ scale: 0.98 }}
+              onClick={() => router.push("/profile")}
+              className="flex h-12 w-full items-center justify-center gap-2 rounded-xl border border-[#E5E7EB] bg-white text-base font-bold text-gray-700 shadow-sm transition-all hover:bg-gray-50"
+            >
+              View Full Profile <ArrowRight size={14} />
+            </motion.button>
+          )}
+        </div>
       </motion.div>
 
       {/* Universities Widget */}
@@ -132,13 +160,34 @@ export default function DashboardGrid({
             </p>
           </div>
         </div>
-        <motion.button
-          whileTap={{ scale: 0.98 }}
-          onClick={() => router.push("/universities")}
-          className="mt-6 flex h-12 w-full items-center justify-center gap-2 rounded-xl border border-[#E5E7EB] bg-white text-base font-bold text-gray-700 shadow-sm transition-all hover:bg-gray-50"
-        >
-          Explore Universities <ArrowRight size={14} />
-        </motion.button>
+        {profile?.currentStage === "DISCOVERY" && stats.shortlisted > 0 ? (
+          <motion.button
+            whileTap={{ scale: 0.98 }}
+            onClick={async () => {
+              try {
+                await fetch("/api/profile/advance", {
+                  method: "POST",
+                  body: JSON.stringify({ targetStage: "SHORTLIST" }),
+                  headers: { "Content-Type": "application/json" },
+                });
+                router.refresh();
+              } catch (e) {
+                console.error(e);
+              }
+            }}
+            className="mt-6 flex h-12 w-full items-center justify-center gap-2 rounded-xl bg-black text-white text-base font-bold shadow-md transition-all hover:bg-gray-800"
+          >
+            Finish Discovery <ArrowRight size={14} />
+          </motion.button>
+        ) : (
+          <motion.button
+            whileTap={{ scale: 0.98 }}
+            onClick={() => router.push("/universities")}
+            className="mt-6 flex h-12 w-full items-center justify-center gap-2 rounded-xl border border-[#E5E7EB] bg-white text-base font-bold text-gray-700 shadow-sm transition-all hover:bg-gray-50"
+          >
+            Explore Universities <ArrowRight size={14} />
+          </motion.button>
+        )}
       </motion.div>
 
       {/* Your Tasks Widget */}
@@ -168,29 +217,71 @@ export default function DashboardGrid({
         </div>
 
         <div className="flex flex-1 flex-col gap-2.5">
-          {[
-            { label: "Complete IELTS registration", priority: "HIGH PRIORITY" },
-            { label: "Start SOP first draft", priority: "HIGH PRIORITY" },
-            {
-              label: "Research scholarship options",
+          {(() => {
+            // Dynamic Task Generation
+            const tasks = [];
+
+            // 1. English Test
+            if (profile?.englishTest) {
+              if (profile.testScore) {
+                // Done
+              } else {
+                tasks.push({
+                  label: `Take ${profile.englishTest} Exam`,
+                  priority: "HIGH PRIORITY",
+                  done: false,
+                });
+              }
+            } else {
+              tasks.push({
+                label: "Select English Proficiency Test",
+                priority: "HIGH PRIORITY",
+                done: false,
+              });
+            }
+
+            // 2. SOP
+            if (profile?.sopStatus === "completed") {
+              // Done
+            } else if (profile?.sopStatus === "drafting") {
+              tasks.push({
+                label: "Continue SOP Draft",
+                priority: "HIGH PRIORITY",
+                done: false,
+              });
+            } else {
+              tasks.push({
+                label: "Start SOP Brainstorming",
+                priority: "HIGH PRIORITY",
+                done: false,
+              });
+            }
+
+            // 3. Document
+            tasks.push({
+              label: "Gather Financial Documents",
               priority: "MEDIUM PRIORITY",
-            },
-          ].map((task) => (
-            <div
-              key={task.label}
-              className="group flex items-center gap-4 rounded-xl bg-[#F9FAFB] border border-[#E5E7EB]/50 p-4 transition-all hover:bg-gray-50 hover:shadow-sm"
-            >
-              <AlertCircle size={22} className="shrink-0 text-gray-900" />
-              <div className="flex flex-col">
-                <span className="text-base font-bold leading-tight text-gray-900">
-                  {task.label}
-                </span>
-                <span className="text-[11px] font-black uppercase tracking-widest text-gray-400 mt-1">
-                  {task.priority}
-                </span>
+              done: false,
+            });
+
+            // Display top 3
+            return tasks.slice(0, 3).map((task) => (
+              <div
+                key={task.label}
+                className="group flex items-center gap-4 rounded-xl bg-[#F9FAFB] border border-[#E5E7EB]/50 p-4 transition-all hover:bg-gray-50 hover:shadow-sm"
+              >
+                <AlertCircle size={22} className="shrink-0 text-gray-900" />
+                <div className="flex flex-col">
+                  <span className="text-base font-bold leading-tight text-gray-900">
+                    {task.label}
+                  </span>
+                  <span className="text-[11px] font-black uppercase tracking-widest text-gray-400 mt-1">
+                    {task.priority}
+                  </span>
+                </div>
               </div>
-            </div>
-          ))}
+            ));
+          })()}
         </div>
 
         <motion.button

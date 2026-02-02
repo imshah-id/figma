@@ -18,7 +18,7 @@ export default function RecommendationBanner() {
         </div>
 
         <div className="max-w-2xl space-y-1">
-          <h2 className="text-2xl font-black tracking-tight text-gray-900">
+          <h2 className="text-xl font-black tracking-tight text-gray-900">
             AI Recommendation
           </h2>
           <p className="text-lg font-bold leading-relaxed text-gray-600">

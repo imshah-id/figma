@@ -22,6 +22,7 @@ export default function Sidebar() {
     { label: "Dashboard", icon: LayoutGrid, href: "/dashboard" },
     { label: "AI Counsellor", icon: MessageSquare, href: "/counsellor" },
     { label: "Universities", icon: School, href: "/universities" },
+    { label: "Shortlist", icon: Sparkles, href: "/shortlist" },
     { label: "Tasks", icon: CheckSquare, href: "/tasks" },
     { label: "Profile", icon: User, href: "/profile" },
   ];
