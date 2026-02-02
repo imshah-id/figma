@@ -12,6 +12,7 @@ import {
 import { motion } from "framer-motion";
 
 import { useRouter } from "next/navigation";
+import DashboardAIInsight from "./DashboardAIInsight";
 
 interface Task {
   id: string;
@@ -336,6 +337,9 @@ export default function DashboardGrid({
             View All Tasks <ArrowRight size={14} />
           </motion.button>
         </motion.div>
+
+        {/* AI Insight Widget */}
+        <DashboardAIInsight userName={profile?.firstName} />
       </div>
     </div>
   );

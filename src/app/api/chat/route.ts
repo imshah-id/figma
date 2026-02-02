@@ -143,7 +143,7 @@ export async function POST(req: Request) {
         personalityInstruction =
           "ROLE: Supportive Mentor.\n" +
           "TONE: Warm, Encouraging, Casual, Empathetic.\n" +
-          "INSTRUCTION: Act like a supportive older sibling or mentor. Use emojis to keep the mood light (e.g., 🚀, ✨, 📚). Validate their concerns before offering advice. Focus on building their confidence while guiding them gently.";
+          "INSTRUCTION: Act like a supportive mentor. Validate their concerns before offering advice. Focus on building their confidence while guiding them gently.";
         break;
     }
 
@@ -215,7 +215,7 @@ export async function POST(req: Request) {
         });
       }
 
-      return NextResponse.json({ reply, sessionId: sessionId || newSessionId });
+      return NextResponse.json({ reply, sessionId: currentSessionId });
     }
 
     const stream = hf.chatCompletionStream({
@@ -233,39 +233,99 @@ export async function POST(req: Request) {
     const customStream = new ReadableStream({
       async start(controller) {
         try {
+          let buffer = "";
+          let isToolCall = false;
+          let isPlainMessage = false;
+          let hasDecided = false;
+
           for await (const chunk of stream) {
             const content = chunk.choices[0]?.delta?.content || "";
             if (!content) continue;
 
             fullAiResponse += content;
 
-            // First chunk detection for Tool Call
-            if (buffer === "" && content.trim().startsWith("{")) {
-              isToolCall = true;
+            if (hasDecided) {
+              if (isToolCall) {
+                buffer += content; // Keep buffering for valid JSON parsing at end
+              } else {
+                controller.enqueue(encoder.encode(content)); // Stream directly
+              }
+              continue;
             }
 
-            if (isToolCall) {
-              buffer += content;
+            // Still deciding...
+            buffer += content;
+            const trimmed = buffer.trimStart();
+
+            if (trimmed.length === 0) {
+              continue; // Still only whitespace
+            }
+
+            // Simple heuristic: if it looks like JSON or Markdown-JSON, it's a tool
+            // Check for { or ```
+            if (trimmed.startsWith("{") || trimmed.startsWith("```")) {
+              isToolCall = true;
+              hasDecided = true;
             } else {
-              controller.enqueue(encoder.encode(content));
+              // It's a normal message
+              isPlainMessage = true;
+              hasDecided = true;
+              // Flush what we buffered
+              controller.enqueue(encoder.encode(buffer));
+              buffer = ""; // Clear buffer to save memory, though we don't need it for plain msgs
             }
           }
 
           if (isToolCall) {
-            // Process the buffered tool call
-            const jsonMatch = buffer.match(/\{[\s\S]*"tool"[\s\S]*\}/);
-            // ... (existing tool logic) ...
-            if (jsonMatch) {
-              // ... (existing tool logic) ...
-            } else {
+            try {
+              // Extract JSON from buffer (handle markdown wrapper)
+              // Match first '{' to last '}'
+              const jsonMatch = buffer.match(/\{[\s\S]*"tool"[\s\S]*\}/);
+
+              if (jsonMatch) {
+                const toolData = JSON.parse(jsonMatch[0]);
+
+                if (toolData.tool === "add_to_shortlist") {
+                  const uniName = toolData.args.universityName;
+                  const result = await addToShortlist(session.userId, uniName);
+
+                  let outputMessage = "";
+                  if (result.status === "success") {
+                    outputMessage = `✅ I've added **${result.university.name}** to your shortlist.`;
+                  } else if (result.status === "already_exists") {
+                    outputMessage = `ℹ️ **${result.university.name}** is already in your shortlist.`;
+                  } else {
+                    outputMessage = `❌ I couldn't find "${uniName}". Please check the spelling.`;
+                  }
+
+                  controller.enqueue(encoder.encode(outputMessage));
+                  fullAiResponse = outputMessage;
+                } else if (toolData.tool === "lock_university") {
+                  // Handle future tools if needed, or just standard acknowledgment
+                  const uniName = toolData.args.universityName;
+                  controller.enqueue(
+                    encoder.encode(
+                      `🔐 Locking **${uniName}** and analyzing next steps...`,
+                    ),
+                  );
+                  fullAiResponse = `🔐 Locking **${uniName}** and analyzing next steps...`;
+                }
+              } else {
+                // Formatting looked like tool but valid JSON not found
+                // Just send the raw buffer so user sees something
+                controller.enqueue(encoder.encode(buffer));
+              }
+            } catch (e) {
+              console.error("Tool Execution Error:", e);
               controller.enqueue(encoder.encode(buffer));
             }
+          } else if (!hasDecided && buffer.length > 0) {
+            // Edge case: Stream ended before we decided (e.g. just whitespace)
+            controller.enqueue(encoder.encode(buffer));
           }
 
           // Save full conversation to DB after stream ends
           if (currentSessionId && fullAiResponse) {
-            // Re-fetch to ensure we have latest state (though we are only writer usually)
-            // simplified: assume sequential
             dbMessages.push({ role: "assistant", content: fullAiResponse });
             await prisma.chatSession.update({
               where: { id: currentSessionId },
