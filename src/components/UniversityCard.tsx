@@ -42,6 +42,7 @@ export default function UniversityCard({
   onLockToggle,
   onGuidanceClick,
   onAnalyzeClick,
+  onShortlistToggle,
 }: {
   uni: UniversityProps;
   index: number;
@@ -51,6 +52,7 @@ export default function UniversityCard({
   onLockToggle?: (val: boolean) => void;
   onGuidanceClick?: () => void;
   onAnalyzeClick?: () => void;
+  onShortlistToggle?: (isShortlisted: boolean) => void;
 }) {
   const [isLiked, setIsLiked] = useState(initialIsShortlisted);
   const [isLockedState, setIsLockedState] = useState(initialIsLocked);
@@ -65,38 +67,38 @@ export default function UniversityCard({
         uni.isExternal ? "border-blue-200/60 bg-blue-50/30" : ""
       }`}
     >
-      {/* Match Score Badge (Only for Local) */}
-      {!uni.isExternal && uni.matchScore !== undefined && (
-        <div className="absolute top-4 right-4 bg-white/90 backdrop-blur-md border border-slate-200 px-3 py-1 rounded-full flex items-center gap-1.5 z-10 shadow-sm">
-          <div
-            className={`w-2 h-2 rounded-full animate-pulse ${
-              (uni.matchScore || 0) >= 80
-                ? "bg-emerald-500"
-                : (uni.matchScore || 0) >= 50
-                  ? "bg-amber-500"
-                  : "bg-slate-400"
-            }`}
-          />
-          <span
-            className={`text-xs font-bold ${
-              (uni.matchScore || 0) >= 80
-                ? "text-emerald-700"
-                : (uni.matchScore || 0) >= 50
-                  ? "text-amber-700"
-                  : "text-slate-500"
-            }`}
-          >
-            {uni.matchScore || 0}% Match
-          </span>
-        </div>
-      )}
-
       {/* External Data Badge - Sleek Version */}
       {uni.isExternal && (
-        <div className="absolute top-4 right-4 bg-blue-50 backdrop-blur-md border border-blue-200 px-3 py-1 rounded-full flex items-center gap-1.5 z-10 shadow-sm">
+        <div
+          className={`absolute top-4 ${showLockAction ? "right-14" : "right-4"} bg-blue-50 backdrop-blur-md border border-blue-200 px-3 py-1 rounded-full flex items-center gap-1.5 z-10 shadow-sm transition-all`}
+        >
           <Sparkles className="w-3 h-3 text-blue-600" />
           <span className="text-xs font-bold text-blue-700">AI Discovery</span>
         </div>
+      )}
+
+      {/* Remove Button (Top Right X) - Only when managing shortlist */}
+      {showLockAction && (
+        <button
+          onClick={async (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            const invalidating = true; // Always removing
+            setIsLiked(false); // Optimistic
+
+            try {
+              const url = `/api/shortlist?universityId=${uni.id}`;
+              await fetch(url, { method: "DELETE" });
+              if (onShortlistToggle) onShortlistToggle(false);
+            } catch (error) {
+              setIsLiked(true); // Revert
+            }
+          }}
+          className="absolute top-4 right-4 z-20 p-1.5 bg-white/80 hover:bg-rose-50 text-slate-400 hover:text-rose-600 rounded-full shadow-sm backdrop-blur-md transition-all border border-transparent hover:border-rose-200"
+          title="Remove from Shortlist"
+        >
+          <X size={18} />
+        </button>
       )}
 
       {/* Dynamic Gradient Header */}
@@ -132,9 +134,39 @@ export default function UniversityCard({
           </div>
         )}
 
-        <h3 className="text-xl font-bold leading-tight relative z-10 text-slate-900 line-clamp-2">
-          {uni.name}
-        </h3>
+        <div className="relative z-10 flex flex-col gap-2.5 items-start">
+          <h3 className="text-xl font-bold leading-tight text-slate-900 line-clamp-2">
+            {uni.name}
+          </h3>
+
+          {/* Match Score Badge (Moved here) */}
+          {!uni.isExternal && uni.matchScore !== undefined && (
+            <div
+              className={`bg-white/90 backdrop-blur-md border border-slate-200 px-3 py-1 rounded-full flex items-center gap-1.5 shadow-sm`}
+            >
+              <div
+                className={`w-2 h-2 rounded-full animate-pulse ${
+                  (uni.matchScore || 0) >= 80
+                    ? "bg-emerald-500"
+                    : (uni.matchScore || 0) >= 50
+                      ? "bg-amber-500"
+                      : "bg-slate-400"
+                }`}
+              />
+              <span
+                className={`text-xs font-bold ${
+                  (uni.matchScore || 0) >= 80
+                    ? "text-emerald-700"
+                    : (uni.matchScore || 0) >= 50
+                      ? "text-amber-700"
+                      : "text-slate-500"
+                }`}
+              >
+                {uni.matchScore || 0}% Match
+              </span>
+            </div>
+          )}
+        </div>
       </div>
 
       <div className="p-5 flex flex-col flex-1 gap-4 relative">
@@ -279,6 +311,7 @@ export default function UniversityCard({
                 "View Analysis"
               )}
             </motion.button>
+            {/* Only show Shortlist button if NOT in Manage/Lock mode */}
             {!uni.isExternal && !showLockAction && (
               <motion.button
                 whileTap={{ scale: 0.95 }}
@@ -301,6 +334,8 @@ export default function UniversityCard({
                         ? {}
                         : { "Content-Type": "application/json" },
                     });
+
+                    if (onShortlistToggle) onShortlistToggle(!invalidating);
                   } catch (error) {
                     setIsLiked(invalidating); // Revert
                   }

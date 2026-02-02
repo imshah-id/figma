@@ -32,6 +32,7 @@ export default function ShortlistGrid({
                 router.refresh();
               }}
               onGuidanceClick={() => router.push("/tasks")}
+              onShortlistToggle={() => router.refresh()}
             />
           </div>
         ))}

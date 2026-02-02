@@ -63,7 +63,7 @@ export default function DashboardAIInsight({
       <div className="mb-6 flex items-center justify-between">
         <div>
           <h3 className="text-2xl font-bold text-indigo-950 tracking-tight flex items-center gap-2">
-            AI Counsellor <Sparkles className="w-5 h-5 text-indigo-500" />
+            AI Counsellor
           </h3>
           <p className="text-sm text-indigo-900/60 font-medium">
             Ask me anything about your application
