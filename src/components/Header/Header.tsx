@@ -4,6 +4,8 @@ import { Sparkles } from "lucide-react";
 import { motion } from "framer-motion";
 import MobileNav from "./MobileNav";
 
+import { useRouter } from "next/navigation";
+
 export default function Header({
   userName = "Student",
   showWelcome = true,
@@ -13,6 +15,7 @@ export default function Header({
   showWelcome?: boolean;
   showAction?: boolean;
 }) {
+  const router = useRouter();
   return (
     <motion.header
       initial={{ opacity: 0, y: -20 }}
@@ -66,8 +69,9 @@ export default function Header({
       {showAction && (
         <div className="hidden items-center lg:pt-4 gap-3 lg:flex">
           <motion.button
-            whileHover={{ y: -2, scale: 1.02 }}
+            whileHover={{ y: -2 }}
             whileTap={{ scale: 0.98 }}
+            onClick={() => router.push("/counsellor")}
             className="flex items-center justify-center gap-2.5 rounded-[16.4px] bg-black px-6 py-3 text-base font-medium text-white shadow-lg transition-all hover:shadow-xl"
           >
             <Sparkles size={18} />

@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { getSession } from "@/lib/auth";
+import { generateGuidanceTasks } from "@/lib/taskUtils";
 
 // Special endpoint for AI Actions to lock by name
 export async function POST(req: Request) {
@@ -54,71 +55,10 @@ export async function POST(req: Request) {
         data: { isLocked: true },
       });
 
-      // 4. Trigger Tasks (Copy logic from main route or rely on shared util)
-      // For speed, I'll duplicate the task generation logic simply here or we assume the main route handles it.
-      // The main route logic was inside PATCH. I should probably refactor, but for now I'll copy the task generation.
-      const updated = await prisma.shortlist.findUnique({
-        where: { id: shortlistItem.id },
-        include: { university: true }, // reload with uni
-      });
+      // 4. Trigger Tasks
+      await generateGuidanceTasks(shortlistItem.id, university.name);
 
-      // Generate Tasks
-      const formatDate = (daysFromNow: number) => {
-        const date = new Date();
-        date.setDate(date.getDate() + daysFromNow);
-        return date.toLocaleDateString("en-US", {
-          month: "short",
-          day: "numeric",
-          year: "numeric",
-        });
-      };
-
-      const COMPREHENSIVE_TASKS = [
-        {
-          title: `Write Statement of Purpose for ${university.name}`,
-          type: "Essay",
-          status: "pending",
-          dueDate: formatDate(14),
-        },
-        {
-          title: "Prepare 2-3 Letters of Recommendation",
-          type: "Documents",
-          status: "pending",
-          dueDate: formatDate(21),
-        },
-        {
-          title: "Request Official Transcripts",
-          type: "Documents",
-          status: "pending",
-          dueDate: formatDate(7),
-        },
-        {
-          title: "Upload English Test Scores (IELTS/TOEFL)",
-          type: "Documents",
-          status: "pending",
-          dueDate: formatDate(14),
-        },
-        {
-          title: `Complete ${university.name} Application Form`,
-          type: "Admin",
-          status: "pending",
-          dueDate: formatDate(28),
-        },
-      ];
-
-      // Check if tasks exist
-      const count = await prisma.guidanceTask.count({
-        where: { shortlistId: shortlistItem.id },
-      });
-
-      if (count === 0) {
-        await prisma.guidanceTask.createMany({
-          data: COMPREHENSIVE_TASKS.map((task) => ({
-            shortlistId: shortlistItem!.id,
-            ...task,
-          })),
-        });
-      }
+      // Update Profile Stage
 
       // Update Profile Stage
       await prisma.profile.update({

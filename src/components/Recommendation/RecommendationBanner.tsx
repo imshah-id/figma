@@ -3,7 +3,11 @@ import React from "react";
 import { Sparkles, BookOpen } from "lucide-react";
 import { motion } from "framer-motion";
 
+import { useRouter } from "next/navigation";
+
 export default function RecommendationBanner() {
+  const router = useRouter();
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 15 }}
@@ -22,8 +26,8 @@ export default function RecommendationBanner() {
             AI Recommendation
           </h2>
           <p className="text-lg font-bold leading-relaxed text-gray-600">
-            Based on your profile, I recommend focusing on completing your lock
-            more university options and strengthen your applications.
+            Based on your profile, I recommend focusing on locking more
+            university options and strengthening your applications.
           </p>
         </div>
       </div>
@@ -32,6 +36,7 @@ export default function RecommendationBanner() {
         <motion.button
           whileHover={{ y: -2 }}
           whileTap={{ scale: 0.98 }}
+          onClick={() => router.push("/counsellor")}
           className="h-12 w-full rounded-xl bg-black px-8 text-base font-bold text-white shadow-md transition-all hover:bg-neutral-800 md:w-auto"
         >
           Get Personalized Guidance
@@ -39,6 +44,7 @@ export default function RecommendationBanner() {
         <motion.button
           whileHover={{ y: -2 }}
           whileTap={{ scale: 0.98 }}
+          onClick={() => router.push("/universities")}
           className="flex h-12 w-full items-center justify-center gap-2 rounded-xl border border-[#E5E7EB] bg-white px-8 text-base font-bold text-gray-700 shadow-sm transition-all hover:bg-gray-50 md:w-auto"
         >
           <BookOpen size={18} className="text-gray-700" />

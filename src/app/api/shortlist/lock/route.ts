@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { getSession } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { STAGES } from "@/lib/constants";
+import { generateGuidanceTasks } from "@/lib/taskUtils";
 
 export async function POST(req: Request) {
   try {
@@ -33,6 +34,19 @@ export async function POST(req: Request) {
     // Auto-advance Stage logic:
     // If locking (isLocked=true) AND currentStage is SHORTLIST
     if (isLocked) {
+      // Fetch university name for task generation
+      const shortlistItem = await prisma.shortlist.findFirst({
+        where: { userId: session.userId, universityId: universityId },
+        include: { university: true },
+      });
+
+      if (shortlistItem) {
+        await generateGuidanceTasks(
+          shortlistItem.id,
+          shortlistItem.university.name,
+        );
+      }
+
       const profile = await prisma.profile.findUnique({
         where: { userId: session.userId },
       });

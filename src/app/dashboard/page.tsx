@@ -37,15 +37,26 @@ export default async function Home() {
     // Silent failure for UI demo purposes
   }
 
-  // Fetch tasks (mock logic or real if table exists)
-  // For now we mock the task list based on profile status or fetch from GuidanceTask if populated
-  // Let's assume we pass the raw stats for now
+  // Fetch tasks
+  let tasks: any[] = [];
+  try {
+    tasks = await prisma.guidanceTask.findMany({
+      where: {
+        shortlist: {
+          userId: session.userId,
+          isLocked: true,
+        },
+      },
+    });
+  } catch (error) {
+    console.warn("Failed to fetch tasks:", error);
+  }
 
   const stats = {
     shortlisted: shortlistedCount,
     locked: lockedCount,
-    completedTasks: 0, // Mock for now
-    totalTasks: 3,
+    completedTasks: tasks.filter((t) => t.status === "completed").length,
+    totalTasks: tasks.length || 0,
   };
 
   return (
@@ -58,7 +69,7 @@ export default async function Home() {
               userName={profile?.user?.fullName || session.email.split("@")[0]}
             />
             <JourneySection currentStage={profile?.currentStage || "PROFILE"} />
-            <DashboardGrid profile={profile} stats={stats} />
+            <DashboardGrid profile={profile} stats={stats} tasks={tasks} />
             <RecommendationBanner />
           </div>
         </main>

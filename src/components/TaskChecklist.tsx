@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
+import { useRouter } from "next/navigation";
 import {
   CheckCircle2,
   Circle,
@@ -16,8 +17,20 @@ import {
 
 interface Task {
   id: string;
-  label: string;
-  completed: boolean;
+  title: string;
+  status: string;
+  type: string;
+  dueDate: string | null;
+}
+
+interface Document {
+  id: string;
+  name: string;
+  category: string;
+  mimeType: string;
+  size: number;
+  data?: string;
+  createdAt: string | Date;
 }
 
 interface TaskChecklistProps {
@@ -26,122 +39,88 @@ interface TaskChecklistProps {
     university: {
       name: string;
       location: string;
+      rank: number;
+      fees: string;
+      acceptanceRate: string;
+      website: string | null;
     };
+    guidanceTasks: Task[];
   }>;
   profile: any;
+  documents: Document[];
 }
-
-// Dynamic Task Generator
-const generateTasks = (university: any, profile: any) => {
-  const tasks = [
-    {
-      id: "sop",
-      label: `Draft Statement of Purpose for ${profile?.targetDegree || "Degree"} in ${profile?.targetMajor || "your field"}`,
-      completed: false,
-    },
-    {
-      id: "lor1",
-      label: "Request Recommendation Letter (Academic)",
-      completed: false,
-    },
-    {
-      id: "lor2",
-      label: "Request Recommendation Letter (Professional)",
-      completed: false,
-    },
-    {
-      id: "transcripts",
-      label: "Order & Scan Official Transcripts",
-      completed: false,
-    },
-    { id: "resume", label: "Update CV / Resume", completed: false },
-    { id: "passport", label: "Verify Passport Validity", completed: false },
-  ];
-
-  // Conditional Tasks based on Profile & Criteria
-
-  // English Proficiency
-  if (profile?.englishTest === "IELTS") {
-    tasks.push({
-      id: "english",
-      label: "Submit IELTS Scores",
-      completed: false,
-    });
-  } else if (profile?.englishTest === "TOEFL") {
-    tasks.push({
-      id: "english",
-      label: "Submit TOEFL Scores",
-      completed: false,
-    });
-  } else {
-    tasks.push({
-      id: "english",
-      label: "Submit English Proficiency Scores (IELTS/TOEFL)",
-      completed: false,
-    });
-  }
-
-  // Aptitude Tests
-  if (
-    profile?.targetDegree?.includes("Master") ||
-    profile?.targetDegree?.includes("PhD")
-  ) {
-    tasks.push({
-      id: "tests",
-      label: "Submit GRE/GMAT Scores",
-      completed: false,
-    });
-  } else {
-    tasks.push({
-      id: "tests",
-      label: "Submit SAT/ACT Scores",
-      completed: false,
-    });
-  }
-
-  // Country Specifics (Mock Logic)
-  if (university?.country === "USA") {
-    tasks.push({
-      id: "finance",
-      label: "Prepare Financial Documents (I-20)",
-      completed: false,
-    });
-  } else if (university?.country === "UK") {
-    tasks.push({
-      id: "finance",
-      label: "Prepare Financial Documents (CAS)",
-      completed: false,
-    });
-  } else {
-    tasks.push({
-      id: "finance",
-      label: "Prepare Financial Proof Documents",
-      completed: false,
-    });
-  }
-
-  tasks.push({ id: "fee", label: "Pay Application Fee", completed: false });
-
-  return tasks;
-};
 
 export default function TaskChecklist({
   lockedUniversities,
   profile,
+  documents = [],
 }: TaskChecklistProps) {
-  const [taskStates, setTaskStates] = useState<
-    Record<string, Record<string, boolean>>
-  >({});
+  const router = useRouter();
   const [noteStates, setNoteStates] = useState<Record<string, string>>({});
+  const [isUploading, setIsUploading] = useState(false);
+  const [activeCategory, setActiveCategory] = useState<string>("General");
+  const fileInputRef = React.useRef<HTMLInputElement>(null);
 
-  const toggleTask = (uniId: string, taskId: string) => {
-    setTaskStates((prev) => ({
-      ...prev,
-      [uniId]: {
-        ...prev[uniId],
-        [taskId]: !prev[uniId]?.[taskId],
-      },
-    }));
+  const triggerUpload = (category: string) => {
+    setActiveCategory(category);
+    fileInputRef.current?.click();
+  };
+
+  const handleFileUpload = async (
+    event: React.ChangeEvent<HTMLInputElement>,
+  ) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    setIsUploading(true);
+    try {
+      // Convert to Base64
+      const reader = new FileReader();
+      reader.onloadend = async () => {
+        const base64String = reader.result as string;
+
+        // Upload to API
+        const response = await fetch("/api/documents", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            name: file.name,
+            type: file.type,
+            size: file.size,
+            data: base64String,
+            category: activeCategory, // Use the clicked category
+          }),
+        });
+
+        if (response.ok) {
+          router.refresh(); // Refresh to see the new document
+        } else {
+          console.error("Upload failed");
+          alert("Failed to upload document. Please try again.");
+        }
+        setIsUploading(false);
+        // Reset input
+        if (fileInputRef.current) fileInputRef.current.value = "";
+      };
+      reader.readAsDataURL(file);
+    } catch (error) {
+      console.error("Error uploading file:", error);
+      setIsUploading(false);
+    }
+  };
+
+  const toggleTask = async (taskId: string, currentStatus: string) => {
+    try {
+      const newStatus = currentStatus === "completed" ? "pending" : "completed";
+      await fetch("/api/guidance", {
+        method: "PATCH",
+        body: JSON.stringify({ taskId, status: newStatus }),
+        headers: { "Content-Type": "application/json" },
+      });
+      router.refresh();
+    } catch (e) {
+      console.error("Task update failed:", e);
+    }
   };
 
   const updateNote = (uniId: string, text: string) => {
@@ -168,10 +147,14 @@ export default function TaskChecklist({
   return (
     <div className="grid grid-cols-1 gap-6">
       {lockedUniversities.map((item) => {
-        const tasks = generateTasks(item.university, profile);
-        const uniTaskState = taskStates[item.id] || {};
-        const completedCount = tasks.filter((t) => uniTaskState[t.id]).length;
-        const progress = Math.round((completedCount / tasks.length) * 100);
+        const tasks = item.guidanceTasks;
+        const completedCount = tasks.filter(
+          (t) => t.status === "completed",
+        ).length;
+        const progress =
+          tasks.length > 0
+            ? Math.round((completedCount / tasks.length) * 100)
+            : 0;
 
         return (
           <div
@@ -263,7 +246,7 @@ export default function TaskChecklist({
                   Required Tasks
                 </h4>
                 {tasks.map((task) => {
-                  const isCompleted = uniTaskState[task.id] || false;
+                  const isCompleted = task.status === "completed";
                   return (
                     <div
                       key={task.id}
@@ -275,7 +258,7 @@ export default function TaskChecklist({
                     >
                       <div
                         className="flex items-center gap-4 cursor-pointer flex-1"
-                        onClick={() => toggleTask(item.id, task.id)}
+                        onClick={() => toggleTask(task.id, task.status)}
                       >
                         <div
                           className={`h-6 w-6 rounded-full border-2 flex items-center justify-center transition-colors flex-shrink-0 ${
@@ -295,7 +278,7 @@ export default function TaskChecklist({
                               : "text-slate-700 group-hover:text-slate-900"
                           }`}
                         >
-                          {task.label}
+                          {task.title}
                         </span>
                       </div>
 
@@ -306,7 +289,7 @@ export default function TaskChecklist({
                             e.stopPropagation();
                             // In a real app, this would open the AI chat with a prompt
                             alert(
-                              `AI Helper: I can help you with "${task.label}". Opening chat...`,
+                              `AI Helper: I can help you with "${task.title}". Opening chat...`,
                             );
                           }}
                         >
@@ -348,37 +331,48 @@ export default function TaskChecklist({
                   </div>
                 </div>
 
-                {/* Quick Resources */}
+                {/* University Snapshot */}
                 <div className="bg-blue-50/50 rounded-xl p-6 border border-blue-100">
-                  <h4 className="font-bold text-blue-900 mb-4">
-                    Quick Resources
+                  <h4 className="font-bold text-blue-900 mb-4 flex items-center gap-2">
+                    <Sparkles size={16} className="text-blue-500" />
+                    University Snapshot
                   </h4>
-                  <ul className="space-y-3">
-                    <li>
+                  <div className="space-y-4">
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm text-slate-500 font-medium">
+                        Global Ranking
+                      </span>
+                      <span className="text-sm font-bold text-slate-900">
+                        #{item.university.rank || "N/A"}
+                      </span>
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm text-slate-500 font-medium">
+                        Acceptance Rate
+                      </span>
+                      <span className="text-sm font-bold text-slate-900">
+                        {item.university.acceptanceRate || "N/A"}
+                      </span>
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm text-slate-500 font-medium">
+                        Tuition Fees
+                      </span>
+                      <span className="text-sm font-bold text-slate-900">
+                        {item.university.fees || "N/A"}
+                      </span>
+                    </div>
+                    {item.university.website && (
                       <a
-                        href="#"
-                        className="flex items-center gap-2 text-sm text-blue-700 hover:text-blue-900 hover:underline"
+                        href={item.university.website}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center justify-center gap-2 w-full mt-4 bg-white border border-blue-200 text-blue-700 font-bold text-sm py-2.5 rounded-lg hover:bg-blue-50 transition-colors shadow-sm"
                       >
-                        <FileText size={16} /> Program Requirements
+                        Visit Official Website <ExternalLink size={14} />
                       </a>
-                    </li>
-                    <li>
-                      <a
-                        href="#"
-                        className="flex items-center gap-2 text-sm text-blue-700 hover:text-blue-900 hover:underline"
-                      >
-                        <ExternalLink size={16} /> Official Website
-                      </a>
-                    </li>
-                    <li>
-                      <a
-                        href="#"
-                        className="flex items-center gap-2 text-sm text-blue-700 hover:text-blue-900 hover:underline"
-                      >
-                        <MessageSquare size={16} /> Chat with Alumni
-                      </a>
-                    </li>
-                  </ul>
+                    )}
+                  </div>
                 </div>
 
                 {/* My Notes */}
@@ -414,46 +408,88 @@ export default function TaskChecklist({
             </div>
 
             {/* Document Vault Section */}
+            {/* Document Vault Section */}
             <div className="mt-8 pt-8 border-t border-slate-100">
               <h4 className="font-bold text-slate-900 mb-4 flex items-center gap-2">
                 <UploadCloud size={18} className="text-slate-400" />
                 Document Vault
               </h4>
+
+              {/* File Input (Hidden) */}
+              <input
+                type="file"
+                ref={fileInputRef}
+                className="hidden"
+                onChange={handleFileUpload}
+              />
+
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <div className="border border-dashed border-slate-300 rounded-xl p-6 flex flex-col items-center justify-center text-center hover:bg-slate-50 transition-colors cursor-pointer group">
-                  <div className="h-10 w-10 rounded-full bg-slate-100 flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
-                    <FileText size={18} className="text-slate-500" />
+                {/* Upload Cards */}
+                {[
+                  "Statement of Purpose",
+                  "CV / Resume",
+                  "Upload Other Docs",
+                ].map((category) => (
+                  <div
+                    key={category}
+                    onClick={() => triggerUpload(category)}
+                    className="border border-dashed border-slate-300 rounded-xl p-6 flex flex-col items-center justify-center text-center hover:bg-slate-50 transition-colors cursor-pointer group active:scale-95 duration-75 select-none"
+                  >
+                    <div className="h-10 w-10 rounded-full bg-slate-100 flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
+                      {isUploading ? (
+                        <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-slate-500"></div>
+                      ) : (
+                        <UploadCloud size={18} className="text-slate-500" />
+                      )}
+                    </div>
+                    <span className="text-sm font-bold text-slate-700">
+                      {category}
+                    </span>
+                    <span className="text-xs text-slate-400 mt-1">
+                      Click to upload
+                    </span>
                   </div>
-                  <span className="text-sm font-bold text-slate-700">
-                    Statement of Purpose
-                  </span>
-                  <span className="text-xs text-slate-400 mt-1">
-                    Drag & drop or browse
-                  </span>
-                </div>
-                <div className="border border-dashed border-slate-300 rounded-xl p-6 flex flex-col items-center justify-center text-center hover:bg-slate-50 transition-colors cursor-pointer group">
-                  <div className="h-10 w-10 rounded-full bg-slate-100 flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
-                    <FileText size={18} className="text-slate-500" />
-                  </div>
-                  <span className="text-sm font-bold text-slate-700">
-                    CV / Resume
-                  </span>
-                  <span className="text-xs text-slate-400 mt-1">
-                    Drag & drop or browse
-                  </span>
-                </div>
-                <div className="border border-dashed border-slate-300 rounded-xl p-6 flex flex-col items-center justify-center text-center hover:bg-slate-50 transition-colors cursor-pointer group">
-                  <div className="h-10 w-10 rounded-full bg-slate-100 flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
-                    <UploadCloud size={18} className="text-slate-500" />
-                  </div>
-                  <span className="text-sm font-bold text-slate-700">
-                    Upload Other Docs
-                  </span>
-                  <span className="text-xs text-slate-400 mt-1">
-                    PDF, DOCX up to 10MB
-                  </span>
-                </div>
+                ))}
               </div>
+
+              {/* Uploaded Documents List */}
+              {documents.length > 0 && (
+                <div className="mt-6">
+                  <h5 className="text-sm font-bold text-slate-900 mb-3">
+                    Uploaded Documents
+                  </h5>
+                  <div className="space-y-2">
+                    {documents.map((doc) => (
+                      <div
+                        key={doc.id}
+                        className="flex items-center justify-between p-3 bg-slate-50 rounded-lg border border-slate-100 group"
+                      >
+                        <div className="flex items-center gap-3 overflow-hidden">
+                          <div className="h-8 w-8 rounded bg-white border border-slate-200 flex items-center justify-center shrink-0 text-slate-500">
+                            <FileText size={16} />
+                          </div>
+                          <div className="flex flex-col min-w-0">
+                            <span className="text-sm font-medium text-slate-900 truncate pr-2">
+                              {doc.name}
+                            </span>
+                            <span className="text-[10px] text-slate-400">
+                              {doc.category} • {(doc.size / 1024).toFixed(0)} KB
+                            </span>
+                          </div>
+                        </div>
+                        <a
+                          href={doc.data}
+                          download={doc.name}
+                          className="p-2 text-slate-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
+                          title="Download"
+                        >
+                          <ExternalLink size={16} />
+                        </a>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
             </div>
           </div>
         );

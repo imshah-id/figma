@@ -328,43 +328,46 @@ export default function UniversityCard({
               </motion.button>
             )}
 
-            {/* Locked Button Logic Integration */}
             {showLockAction && (
               <motion.button
                 whileTap={{ scale: 0.95 }}
                 onClick={async (e) => {
                   e.preventDefault();
-                  if (isLockedState) {
-                    // Already locked, click means Go to Tasks
-                    if (onGuidanceClick) onGuidanceClick();
-                  } else {
-                    // Not locked, lock it
-                    const newLocked = true;
-                    setIsLockedState(newLocked);
-                    if (onLockToggle) onLockToggle(newLocked);
-                    try {
-                      await fetch("/api/shortlist/lock", {
-                        method: "POST",
-                        body: JSON.stringify({
-                          universityId: uni.id,
-                          isLocked: newLocked,
-                        }),
-                        headers: { "Content-Type": "application/json" },
-                      });
-                    } catch (err) {
-                      setIsLockedState(false);
-                    }
+
+                  // Toggle Lock State
+                  const newLocked = !isLockedState;
+                  setIsLockedState(newLocked);
+                  if (onLockToggle) onLockToggle(newLocked);
+
+                  try {
+                    await fetch("/api/shortlist/lock", {
+                      method: "POST",
+                      body: JSON.stringify({
+                        universityId: uni.id,
+                        isLocked: newLocked,
+                      }),
+                      headers: { "Content-Type": "application/json" },
+                    });
+
+                    // If unlocking, maybe refresh or toast?
+                  } catch (err) {
+                    setIsLockedState(!newLocked); // Revert on failure
                   }
                 }}
-                className={`flex-1 py-2.5 rounded-xl font-bold text-xs transition-all flex items-center justify-center gap-1 cursor-pointer text-white shadow-md ${
+                className={`flex-1 py-2.5 rounded-xl font-bold text-xs transition-all flex items-center justify-center gap-1 cursor-pointer text-white shadow-md group/lock ${
                   isLockedState
-                    ? "bg-emerald-600 hover:bg-emerald-700 shadow-emerald-200"
+                    ? "bg-emerald-600 hover:bg-rose-600 shadow-emerald-200 hover:shadow-rose-200"
                     : "bg-slate-900 hover:bg-indigo-600 shadow-indigo-200"
                 }`}
               >
                 {isLockedState ? (
                   <>
-                    Start Application <ArrowRight className="w-3 h-3" />
+                    <span className="flex items-center gap-1 group-hover/lock:hidden">
+                      <Check className="w-3 h-3" /> Locked
+                    </span>
+                    <span className="hidden group-hover/lock:flex items-center gap-1">
+                      <X className="w-3 h-3" /> Unlock
+                    </span>
                   </>
                 ) : (
                   "Lock University"

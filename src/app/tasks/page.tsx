@@ -24,7 +24,17 @@ export default async function TasksPage() {
       userId: session.userId,
       isLocked: true,
     },
-    include: { university: true },
+    include: {
+      university: true,
+      guidanceTasks: {
+        orderBy: { title: "asc" },
+      },
+    },
+  });
+
+  const documents = await prisma.document.findMany({
+    where: { userId: session.userId },
+    orderBy: { createdAt: "desc" },
   });
 
   return (
@@ -57,6 +67,7 @@ export default async function TasksPage() {
                 <TaskChecklist
                   lockedUniversities={lockedUniversities}
                   profile={profile}
+                  documents={documents}
                 />
               </div>
             </StageGuard>
