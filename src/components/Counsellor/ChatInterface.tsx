@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useRef, useEffect } from "react";
-import { Send, User as UserIcon, Bot, Loader2 } from "lucide-react";
+import { Send, User as UserIcon, Bot, Loader2, Sparkles } from "lucide-react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 
@@ -11,9 +11,9 @@ interface Message {
 }
 
 const PERSONALITIES = [
-  { id: "friendly", label: "Friendly Mentor", emoji: "😊" },
-  { id: "strict", label: "Strict Interviewer", emoji: "🤨" },
-  { id: "professional", label: "Professional Counsellor", emoji: "👔" },
+  { id: "friendly", label: "Friendly Mentor" },
+  { id: "strict", label: "Mock Interviewer" },
+  { id: "professional", label: "Admission Strategist" },
 ];
 
 export default function ChatInterface({
@@ -141,28 +141,39 @@ export default function ChatInterface({
   return (
     <div className="flex h-full flex-col bg-white overflow-hidden">
       {/* Header / Personality Selector */}
-      <div className="flex items-center justify-between border-b border-gray-300 px-4 py-3 bg-gray-50/50">
-        <div className="flex items-center gap-2">
-          <span className="text-xs font-semibold uppercase tracking-wider text-gray-500">
-            Personality:
-          </span>
-          <div className="flex bg-gray-200 rounded-lg p-1">
-            {PERSONALITIES.map((p) => (
-              <button
-                key={p.id}
-                onClick={() => !sessionId && setPersonality(p.id)} // Disable switching mid-session for consistency if desired, or allow dynamic
-                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md text-sm font-medium transition-all ${
-                  personality === p.id
-                    ? "bg-white text-black shadow-sm"
-                    : "text-gray-500 hover:text-gray-700"
-                } ${sessionId ? "cursor-not-allowed opacity-80" : ""}`}
-                title={sessionId ? "Start new chat to change personality" : ""}
-              >
-                <span>{p.emoji}</span>
-                <span className="hidden sm:inline">{p.label}</span>
-              </button>
-            ))}
+      <div className="flex items-center justify-between border-b border-gray-200 px-6 py-4 bg-white">
+        <div className="flex items-center gap-4">
+          <div className="h-10 w-10 rounded-full bg-black flex items-center justify-center text-white">
+            <Bot size={20} />
           </div>
+          <div>
+            <h2 className="text-lg font-bold text-gray-900 leading-tight">
+              AI Counsellor
+            </h2>
+            <p className="text-xs text-gray-500 font-medium">
+              Always here to help you
+            </p>
+          </div>
+        </div>
+
+        <div className="flex gap-1 bg-gray-100/50 p-1 rounded-xl">
+          {PERSONALITIES.map((p) => (
+            <button
+              key={p.id}
+              onClick={() => !sessionId && setPersonality(p.id)}
+              className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-bold transition-all ${
+                personality === p.id
+                  ? "bg-black text-white shadow-md"
+                  : "text-gray-500 hover:bg-white hover:text-black"
+              } ${sessionId ? "cursor-not-allowed opacity-50" : ""}`}
+              title={sessionId ? "Start new chat to change personality" : ""}
+            >
+              {p.id === "friendly" && <UserIcon size={14} />}
+              {p.id === "strict" && <Bot size={14} />}
+              {p.id === "professional" && <Sparkles size={14} />}
+              <span>{p.label}</span>
+            </button>
+          ))}
         </div>
       </div>
 
