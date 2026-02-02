@@ -344,6 +344,7 @@ export async function POST(req: Request) {
       headers: {
         "Content-Type": "text/plain; charset=utf-8",
         "Transfer-Encoding": "chunked",
+        "x-session-id": currentSessionId || "",
       },
     });
   } catch (error: any) {

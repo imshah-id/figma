@@ -15,6 +15,7 @@ export default function DashboardAIInsight({
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [response, setResponse] = useState<string | null>(null);
+  const [sessionId, setSessionId] = useState<string | null>(null);
 
   const handleAsk = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -29,6 +30,7 @@ export default function DashboardAIInsight({
         method: "POST",
         body: JSON.stringify({
           message: question,
+          sessionId: sessionId,
           stream: false, // Use non-streaming for simple widget interaction
         }),
         headers: { "Content-Type": "application/json" },
@@ -38,6 +40,9 @@ export default function DashboardAIInsight({
 
       const data = await res.json();
       setResponse(data.reply);
+      if (data.sessionId) {
+        setSessionId(data.sessionId);
+      }
     } catch (err) {
       setResponse("I'm having a bit of trouble connecting. Try again!");
     } finally {

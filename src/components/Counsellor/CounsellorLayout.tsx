@@ -84,6 +84,7 @@ export default function CounsellorLayout({ userName }: { userName: string }) {
                   sessionId={currentSessionId}
                   initialMessages={initialMessages}
                   onMessageSent={fetchSessions} // Refresh list to show new chat or update title
+                  onSessionCreated={(id) => setCurrentSessionId(id)}
                 />
               </div>
             </div>

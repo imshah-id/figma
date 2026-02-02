@@ -21,11 +21,13 @@ export default function ChatInterface({
   sessionId,
   initialMessages,
   onMessageSent,
+  onSessionCreated,
 }: {
   userName: string;
   sessionId: string | null;
   initialMessages?: Message[];
   onMessageSent: () => void;
+  onSessionCreated?: (id: string) => void;
 }) {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
@@ -87,6 +89,12 @@ export default function ChatInterface({
       });
 
       if (!response.ok) throw new Error("Failed to fetch response");
+
+      // Check for new session ID in headers
+      const newSessionId = response.headers.get("x-session-id");
+      if (newSessionId && newSessionId !== sessionId && onSessionCreated) {
+        onSessionCreated(newSessionId);
+      }
 
       // Handle Streaming Response
       if (response.body) {
