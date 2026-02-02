@@ -81,26 +81,47 @@ export async function POST(req: Request) {
     const hf = new HfInference(process.env.HUGGINGFACE_API_KEY);
 
     // Save user message to DB if session exists
-    let dbMessages = [];
-    if (sessionId) {
+    // Create session if it doesn't exist
+    let currentSessionId = sessionId;
+    let dbMessages: any[] = [];
+
+    if (!currentSessionId) {
+      // Create new session
+      const newSession = await prisma.chatSession.create({
+        data: {
+          userId: session.userId,
+          title: message.substring(0, 30) + (message.length > 30 ? "..." : ""),
+          personality,
+          messages: JSON.stringify([]),
+        },
+      });
+      currentSessionId = newSession.id;
+      dbMessages = [];
+
+      // Save user message immediately
+      dbMessages.push({ role: "user", content: message });
+      await prisma.chatSession.update({
+        where: { id: currentSessionId },
+        data: {
+          messages: JSON.stringify(dbMessages),
+        },
+      });
+    } else {
+      // Load existing session
       const chatSession = await prisma.chatSession.findUnique({
-        where: { id: sessionId },
+        where: { id: currentSessionId },
       });
       if (chatSession) {
         dbMessages = JSON.parse(chatSession.messages);
         dbMessages.push({ role: "user", content: message });
         await prisma.chatSession.update({
-          where: { id: sessionId },
+          where: { id: currentSessionId },
           data: {
             messages: JSON.stringify(dbMessages),
             updatedAt: new Date(),
           },
         });
       }
-    } else {
-      // If no ID, we rely on client sent history for context (temporary)
-      // or we could enforce creating a session first.
-      // ideally the client creates a session first, or we create one here.
     }
 
     // Personality Prompt Adjustment
@@ -108,15 +129,21 @@ export async function POST(req: Request) {
     switch (personality) {
       case "strict":
         personalityInstruction =
-          "You are a Strict Interviewer. Be critical, concise, and professional. Ask tough questions about the student's choices. Do not offer encouragement.";
+          "ROLE: Mock Interviewer & Critic.\n" +
+          "TONE: Strict, Professional, Challenging, Direct.\n" +
+          "INSTRUCTION: You are conducting a high-stakes university interview. Do NOT be nice. Do NOT offer encouragement. Challenge every vague statement the student makes. Ask deep, probing follow-up questions. Point out weaknesses in their profile brutally but constructively. Your goal is to prepare them for the toughest scrutiny.";
         break;
       case "professional":
         personalityInstruction =
-          "You are a Professional Counsellor. Be formal, objective, and structured. Focus on facts and requirements.";
+          "ROLE: Strategic Admission Consultant.\n" +
+          "TONE: Formal, Objective, Analytical, Concise.\n" +
+          "INSTRUCTION: Focus purely on data, requirements, and strategy. Do not use emotional language. Analyze their cohesive application strategy. Provide specific, actionable steps to improve acceptance chances based on their stats. Be efficient and business-like.";
         break;
       default: // friendly
         personalityInstruction =
-          "You are a Friendly Mentor. Be encouraging, warm, and helpful. Use emojis occasionally.";
+          "ROLE: Supportive Mentor.\n" +
+          "TONE: Warm, Encouraging, Casual, Empathetic.\n" +
+          "INSTRUCTION: Act like a supportive older sibling or mentor. Use emojis to keep the mood light (e.g., 🚀, ✨, 📚). Validate their concerns before offering advice. Focus on building their confidence while guiding them gently.";
         break;
     }
 
@@ -137,7 +164,7 @@ export async function POST(req: Request) {
     // Use DB history if available, otherwise fallback to request messages
     // Note: Request messages usually contain the full history in client state
     const historyToUse =
-      sessionId && dbMessages.length > 0 ? dbMessages : messages;
+      currentSessionId && dbMessages.length > 0 ? dbMessages : messages;
 
     let chatHistory = historyToUse
       .filter(
@@ -180,15 +207,15 @@ export async function POST(req: Request) {
       const reply = response.choices[0].message.content;
 
       // Save AI reply to DB
-      if (sessionId) {
+      if (currentSessionId) {
         dbMessages.push({ role: "assistant", content: reply });
         await prisma.chatSession.update({
-          where: { id: sessionId },
+          where: { id: currentSessionId },
           data: { messages: JSON.stringify(dbMessages) },
         });
       }
 
-      return NextResponse.json({ reply });
+      return NextResponse.json({ reply, sessionId: sessionId || newSessionId });
     }
 
     const stream = hf.chatCompletionStream({
@@ -236,12 +263,12 @@ export async function POST(req: Request) {
           }
 
           // Save full conversation to DB after stream ends
-          if (sessionId && fullAiResponse) {
+          if (currentSessionId && fullAiResponse) {
             // Re-fetch to ensure we have latest state (though we are only writer usually)
             // simplified: assume sequential
             dbMessages.push({ role: "assistant", content: fullAiResponse });
             await prisma.chatSession.update({
-              where: { id: sessionId },
+              where: { id: currentSessionId },
               data: { messages: JSON.stringify(dbMessages) },
             });
           }

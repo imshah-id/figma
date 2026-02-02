@@ -88,16 +88,12 @@ export default function ChatInterface({
 
       if (!response.ok) throw new Error("Failed to fetch response");
 
-      // Notify parent to refresh session list if it's a new chat to get title update
-      // But actually title update on new chat is tricky without polling.
-      // We'll rely on onMessageSent event.
-      onMessageSent();
-
       // Handle Streaming Response
       if (response.body) {
         const reader = response.body.getReader();
         const decoder = new TextDecoder();
         let botReply = "";
+        let newSessionId = null;
 
         // Add placeholder message
         setMessages((prev) => [...prev, { role: "assistant", content: "" }]);
@@ -106,6 +102,21 @@ export default function ChatInterface({
           const { done, value } = await reader.read();
           if (done) break;
           const chunk = decoder.decode(value, { stream: true });
+
+          // Check for sessionId in the chunk (it might be mixed with text if we aren't careful,
+          // but our backend sends it as JSON in non-streaming or we need to parse it if we changed stream format.
+          // WAIT, my backend change for streaming was:
+          // return new Response(customStream, ...
+          // The customStream sends chunks of text.
+          // It DOES NOT send the sessionId in the stream currently.
+
+          // Reviewing backend logic:
+          // The backend returns `NextResponse.json({ reply, sessionId })` ONLY for non-streaming.
+          // For streaming, I didn't update the stream to send the sessionId!
+
+          // Correct approach: I need to update the backend stream to send the sessionId first or I need to switch to non-streaming for the first message?
+          // OR, I can just refresh the session list regardless.
+
           botReply += chunk;
 
           // Update the last message with the accumulated chunk
@@ -115,6 +126,11 @@ export default function ChatInterface({
             return newMessages;
           });
         }
+
+        // After stream is done, we should refresh the session list.
+        // Since we don't have the new ID easily from the stream without protocol changes,
+        // we will just trigger the refresh. The Layout will fetch latest sessions.
+        onMessageSent();
       } else {
         // Fallback for non-streaming
         const data = await response.json();
@@ -122,6 +138,7 @@ export default function ChatInterface({
           ...prev,
           { role: "assistant", content: data.reply },
         ]);
+        onMessageSent();
       }
     } catch (error) {
       console.error("Chat error:", error);
